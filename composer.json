@@ -1,0 +1,30 @@
+{
+  "name":        "falseclock/odata-server-php",
+  "type":        "library",
+  "description": "OData PHP Application server",
+  "keywords":    [
+    "OData",
+    "server",
+    "REST",
+    "API"
+  ],
+  "license":     "MIT",
+  "authors":     [
+    {
+      "name":  "Nurlan Mukhanov",
+      "email": "nurike@gmail.com"
+    }
+  ],
+  "require":     {
+    "php": "^7.0"
+  },
+  "require-dev": {
+  },
+  "suggest":     {
+  },
+  "autoload":    {
+    "psr-4": {
+      "DBD\\": "src/"
+    }
+  }
+}
