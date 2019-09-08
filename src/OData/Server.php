@@ -41,8 +41,6 @@ class Server
 			$this->response = new Response();
 		}
 		new Processor($this->request, $this->response);
-
-		$foo = 1;
 	}
 
 	/**

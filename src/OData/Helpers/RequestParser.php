@@ -125,15 +125,20 @@ class RequestParser
 
 		$contentLength = floatval($_SERVER['CONTENT_LENGTH']);
 
-		if(in_array($request->getMethod(), [ Method::PATCH, Method::POST, Method::PUT ]) and $contentLength) {
+        if (in_array($request->getMethod(), [Method::PATCH, Method::POST, Method::PUT])) {
 
-			$payload = file_get_contents('php://input');
+            if ($contentLength) {
 
-			if(mb_strlen($payload) != $contentLength) {
-				throw new Exception("Payload length not equal to ");
-			}
+                $payload = file_get_contents('php://input');
 
-			$request->setPayLoad($payload);
+                if (mb_strlen($payload) != $contentLength) {
+                    throw new Exception("Payload length not equal to header length");
+                }
+
+                $request->setPayLoad($payload);
+            } else {
+                throw new Exception("No payload provided");
+            }
 		}
 	}
 

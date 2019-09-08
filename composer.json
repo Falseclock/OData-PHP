@@ -1,34 +1,41 @@
 {
-  "name":        "falseclock/odata-server-php",
-  "type":        "library",
+  "name": "falseclock/odata-server-php",
+  "type": "library",
   "description": "OData PHP Application server",
-  "keywords":    [
+  "keywords": [
     "OData",
     "server",
     "REST",
     "API"
   ],
-  "license":     "MIT",
-  "authors":     [
+  "license": "MIT",
+  "authors": [
     {
       "name":  "Nurlan Mukhanov",
       "email": "nurike@gmail.com"
     }
   ],
-  "require":     {
-    "php": "^7.1"
+  "require": {
+    "php": "^7.1",
+    "ext-json": "*",
+    "ext-xmlwriter": "*"
   },
   "require-dev": {
     "symfony/var-dumper": "^3.3"
   },
-  "suggest":     {
+  "suggest": {
   },
-  "autoload":    {
+  "autoload": {
     "psr-4": {
       "OData\\": "src/"
     }
   },
-  "config":      {
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  },
+  "config": {
     "optimize-autoloader": true,
     "apcu-autoloader":     true
   }
