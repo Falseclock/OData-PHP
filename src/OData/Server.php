@@ -2,6 +2,7 @@
 
 namespace OData;
 
+use Exception;
 use OData\Helpers\RequestParser;
 use OData\Server\Context\Response;
 use OData\Server\Processor;
@@ -29,8 +30,11 @@ class Server
 		return $this->response;
 	}
 
+	/**
+	 * @throws Exception
+	 */
 	public function process() {
-		if(!isset($this->request)) {
+		if(!isset($this->request) and PHP_SAPI !== 'cli') {
 			$this->request = RequestParser::cgi();
 		}
 		if(!isset($this->response)) {
