@@ -1,9 +1,9 @@
 <?php
 
-namespace OData\Server;
+namespace Falseclock\OData\Server;
 
 use Composer\Autoload\ClassLoader;
-use OData\Helpers\Singleton;
+use Falseclock\OData\Helpers\Singleton;
 
 class Configuration extends Singleton
 {

@@ -1,10 +1,11 @@
 <?php
 
-namespace OData\Server;
+namespace Falseclock\OData\Server;
 
-use OData\Handlers\CRUDHandler;
-use OData\Server\Context\Request;
-use OData\Server\Context\Response;
+use Exception;
+use Falseclock\OData\Handlers\CRUDHandler;
+use Falseclock\OData\Server\Context\Request;
+use Falseclock\OData\Server\Context\Response;
 
 /**
  * Class Processor
@@ -24,10 +25,12 @@ class Processor
      * Дело в том, что мы хотим добиться возможности запускать обработчик как через cli так и через cgi
      * плюс ко всему мы можем генерировать тест кейсы, формирую заранее запросы и ответы
      *
-     * @param Request  $request
+     * @param Request $request
      * @param Response $response
+     * @throws Exception
      */
-    public function __construct(Request &$request, Response &$response) {
+    public function __construct(Request &$request, Response &$response)
+    {
         $this->request = $request;
         $this->response = $response;
 
@@ -36,8 +39,10 @@ class Processor
 
     /**
      * Здесь мы обрабатываем данные и формируем запрос и ответ
+     * @throws Exception
      */
-    private function process(): void {
+    private function process(): void
+    {
         new CRUDHandler($this->request, $this->response);
     }
 }

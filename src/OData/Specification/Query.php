@@ -1,6 +1,6 @@
 <?php
 
-namespace OData\Specification;
+namespace Falseclock\OData\Specification;
 
 class Query
 {

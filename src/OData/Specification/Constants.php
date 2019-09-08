@@ -11,22 +11,29 @@
  * @author       Written by Nurlan Mukhanov <nmukhanov@mp.kz>, сентябрь 2019
  */
 
-namespace OData\Specification;
+namespace Falseclock\OData\Specification;
 
 
 class Constants
 {
-    // Schema Namespace For Atom.
+    /** @var string Schema Namespace For Atom */
     const ATOM_NAMESPACE = 'http://www.w3.org/2005/Atom';
 
     //Schema Namespace for Atom Publishing Protocol.
     const APP_NAMESPACE = 'http://www.w3.org/2007/app';
+
+
+    const METADATA_NAMESPACE_PREFIX = 'metadata';
+    const METADATA_NAMESPACE = "http://docs.oasis-open.org/odata/ns/metadata";
+    const METADATA_NAMESPACE_CONTEXT = "context";
+    const METADATA_NAMESPACE_NAME = "name";
 
     //XML element name to mark 'service' element in APP.
     const ATOM_PUBLISHING_SERVICE_ELEMENT_NAME = 'service';
 
     // Schema Namespace prefix For xml.
     const XML_NAMESPACE_PREFIX = 'xml';
+
 
     //XML attribute value to indicate the base URI for a document or element.
     const XML_BASE_ATTRIBUTE_NAME = 'base';
@@ -38,7 +45,7 @@ class Constants
     const XMLNS_NAMESPACE_PREFIX = 'xmlns';
 
     //XML element name to mark title element in Atom.
-    const ATOM_TITLE_ELELMET_NAME = 'title';
+    const ATOM_TITLE_ELEMENT_NAME = 'title';
 
     //XML element name to mark 'collection' element in APP.
     const ATOM_PUBLISHING_COLLECTION_ELEMENT_NAME = 'collection';
@@ -52,6 +59,7 @@ class Constants
      * @var string
      */
     const ATOM_NAMESPACE_PREFIX = 'atom';
+
 
     /**
      * XML prefix for the Atom Publishing Protocol namespace

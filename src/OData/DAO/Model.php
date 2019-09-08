@@ -1,6 +1,6 @@
 <?php
 
-namespace OData\DAO;
+namespace Falseclock\OData\DAO;
 
 use Exception;
 

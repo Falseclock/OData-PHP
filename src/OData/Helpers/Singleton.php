@@ -7,7 +7,7 @@
  * @license      GNU (Library|Lesser) General Public License, version 3
  */
 
-namespace OData\Helpers;
+namespace Falseclock\OData\Helpers;
 
 use Exception;
 

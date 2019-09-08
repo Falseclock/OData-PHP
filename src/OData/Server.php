@@ -1,59 +1,79 @@
 <?php
 
-namespace OData;
+namespace Falseclock\OData;
 
 use Exception;
-use OData\Helpers\RequestParser;
-use OData\Server\Context\Response;
-use OData\Server\Processor;
+use Falseclock\OData\Helpers\RequestParser;
+use Falseclock\OData\Server\Context\Request;
+use Falseclock\OData\Server\Context\Response;
+use Falseclock\OData\Server\Processor;
 
 class Server
 {
-	private $request;
-	private $response;
+    /** @var Request $request */
+    private $request;
+    /** @var Response $response */
+    private $response;
 
-	public function __construct() {
+    public function __construct()
+    {
 
-	}
+    }
 
-	/**
-	 * @return Server\Context\Request
-	 */
-	public function getRequest(): Server\Context\Request {
-		return $this->request;
-	}
+    /**
+     * @return Request
+     */
+    public function getRequest(): Request
+    {
+        return $this->request;
+    }
 
-	/**
-	 * @return Response
-	 */
-	public function getResponse(): Response {
-		return $this->response;
-	}
+    /**
+     * @param Request $request
+     */
+    public function setRequest(Request $request): void
+    {
+        $this->request = $request;
+    }
 
-	/**
-	 * @throws Exception
-	 */
-	public function process() {
-		if(!isset($this->request) and PHP_SAPI !== 'cli') {
-			$this->request = RequestParser::cgi();
-		}
-		if(!isset($this->response)) {
-			$this->response = new Response();
-		}
-		new Processor($this->request, $this->response);
-	}
+    public function out()
+    {
+        foreach ($this->response->getHeaders() as $header) {
+            @header("{$header->name}: {$header->value}");
+        }
+        echo $this->getResponse()->getPayLoad();
+    }
 
-	/**
-	 * @param Server\Context\Request $request
-	 */
-	public function setRequest(Server\Context\Request $request): void {
-		$this->request = $request;
-	}
+    /**
+     * @return Response
+     */
+    public function getResponse(): Response
+    {
+        return $this->response;
+    }
 
-	/**
-	 * @param Response $response
-	 */
-	public function setResponse(Response $response): void {
-		$this->response = $response;
-	}
+    /**
+     * @param Response $response
+     */
+    public function setResponse(Response $response): void
+    {
+        $this->response = $response;
+    }
+
+    /**
+     * @return $this
+     * @throws Exception
+     */
+    public function process()
+    {
+        if (!isset($this->request) and PHP_SAPI !== 'cli') {
+            $this->request = RequestParser::cgi();
+        }
+        if (!isset($this->response)) {
+            $this->response = new Response();
+        }
+        new Processor($this->request, $this->response);
+
+        return $this;
+    }
 }

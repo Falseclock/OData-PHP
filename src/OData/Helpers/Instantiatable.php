@@ -1,6 +1,6 @@
 <?php
 
-namespace OData\Helpers;
+namespace Falseclock\OData\Helpers;
 
 interface Instantiatable
 {

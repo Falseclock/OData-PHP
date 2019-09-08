@@ -1,6 +1,6 @@
 <?php
 
-namespace OData\Server\Context;
+namespace Falseclock\OData\Server\Context;
 
 class Parameter
 {

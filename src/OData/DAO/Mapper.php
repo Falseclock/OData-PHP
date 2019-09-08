@@ -11,9 +11,9 @@
  * @author       Written by Nurlan Mukhanov <nmukhanov@mp.kz>, Ноябрь 2018
  */
 
-namespace OData\DAO;
+namespace Falseclock\OData\DAO;
 
-use OData\Helpers\Singleton;
+use Falseclock\OData\Helpers\Singleton;
 
 /**
  * Название переменной в дочернем классе, которая должна быть если мы вызываем BaseHandler

@@ -1,11 +1,11 @@
 <?php
 
-namespace OData\Handlers;
+namespace Falseclock\OData\Handlers;
 
 use Exception;
-use OData\Server\Context\Request;
-use OData\Server\Context\Response;
-use OData\Specification\Method;
+use Falseclock\OData\Server\Context\Request;
+use Falseclock\OData\Server\Context\Response;
+use Falseclock\OData\Specification\Method;
 
 class CRUDHandler
 {

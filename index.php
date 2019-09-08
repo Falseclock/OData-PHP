@@ -1,7 +1,7 @@
 <?php
 
-use OData\Server;
-use OData\Server\Configuration;
+use Falseclock\OData\Server;
+use Falseclock\OData\Server\Configuration;
 
 $composer = require('./vendor/autoload.php');
 
@@ -13,8 +13,7 @@ try {
                  ->setComposer($composer)
     ;
     $server = new Server();
-
-    $server->process();
+    $server->process()->out();
 
 } catch (Exception $e) {
     echo $e->getMessage();

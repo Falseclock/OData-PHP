@@ -11,10 +11,10 @@
  * @author       Written by Nurlan Mukhanov <nmukhanov@mp.kz>, сентябрь 2019
  */
 
-namespace OData\Handlers;
+namespace Falseclock\OData\Handlers;
 
 use Exception;
-use OData\Server\Configuration;
+use Falseclock\OData\Server\Configuration;
 use ReflectionClass;
 
 class EntitiesProvider

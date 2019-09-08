@@ -13,8 +13,8 @@
 
 namespace Tests\Entities;
 
-use OData\DAO\Mapper;
-use OData\DAO\Model;
+use Falseclock\OData\DAO\Mapper;
+use Falseclock\OData\DAO\Model;
 
 class TenderLot extends Model
 {

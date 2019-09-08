@@ -11,7 +11,7 @@
  * @author       Written by Nurlan Mukhanov <nmukhanov@mp.kz>, сентябрь 2019
  */
 
-namespace OData\Specification;
+namespace Falseclock\OData\Specification;
 
 
 class Primitive

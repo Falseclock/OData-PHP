@@ -1,105 +1,150 @@
 <?php
 
-namespace OData\Server\Context;
+namespace Falseclock\OData\Server\Context;
 
 class Request
 {
-	/** @var string $method */
-	private $method;
-	/** @var Header[] $headers */
-	private $headers;
-	/** @var string $payLoad */
-	private $payLoad;
-	/** @var string */
-	private $url;
-	/** @var Parameter[] $params */
-	private $params;
-	/** @var string $path */
-	private $path;
+    const FORMAT_XML = "xml";
+    const FORMAT_JSON = "json";
 
-	/**
-	 * @return Header[]
-	 */
-	public function getHeaders(): array {
-		return $this->headers;
-	}
+    /** @var string $method */
+    private $method;
+    /** @var Header[] $headers */
+    private $headers;
+    /** @var string $payLoad */
+    private $payLoad;
+    /** @var string */
+    private $url;
+    /** @var Parameter[] $params */
+    private $params;
+    /** @var string $path */
+    private $path;
+    /** @var string $format */
+    private $format;
+    /** @var string $metadata */
+    private $metadata = "minimal";
 
-	/**
-	 * @return string
-	 */
-	public function getMethod(): string {
-		return $this->method;
-	}
+    /**
+     * @return string
+     */
+    public function getMetadata(): string
+    {
+        return $this->metadata;
+    }
 
-	/**
-	 * @return Parameter[]
-	 */
-	public function getParams(): array {
-		return $this->params;
-	}
+    /**
+     * @param string $metadata
+     */
+    public function setMetadata(string $metadata): void
+    {
+        $this->metadata = $metadata;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getPath(): string {
-		return $this->path;
-	}
+    public function getFormat()
+    {
+        return $this->format;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getPayLoad(): string {
-		return $this->payLoad;
-	}
+    public function setFormat(string $format): void
+    {
+        $this->format = $format;
+    }
 
-	/**
-	 * @return string
-	 */
-	public function getUrl(): string {
-		return $this->url;
-	}
+    /**
+     * @return Header[]
+     */
+    public function getHeaders(): array
+    {
+        return $this->headers;
+    }
 
-	/**
-	 * @param Header[] $headers
-	 */
-	public function setHeaders(array $headers): void {
-		$this->headers = $headers;
-	}
+    /**
+     * @param Header[] $headers
+     */
+    public function setHeaders(array $headers): void
+    {
+        $this->headers = $headers;
+    }
 
-	/**
-	 * @param string $method
-	 */
-	public function setMethod(string $method): void {
-		$this->method = $method;
-	}
+    /**
+     * @return string
+     */
+    public function getMethod(): string
+    {
+        return $this->method;
+    }
 
-	/**
-	 * @param Parameter[] $params
-	 */
-	public function setParams(array $params): void {
-		$this->params = $params;
-	}
+    /**
+     * @param string $method
+     */
+    public function setMethod(string $method): void
+    {
+        $this->method = $method;
+    }
 
-	/**
-	 * @param string $path
-	 */
-	public function setPath(string $path): void {
-		$this->path = $path;
-	}
+    /**
+     * @return Parameter[]
+     */
+    public function getParams(): array
+    {
+        return $this->params;
+    }
 
-	/**
-	 * @param string $payLoad
-	 */
-	public function setPayLoad(string $payLoad): void {
-		$this->payLoad = $payLoad;
-	}
+    /**
+     * @param Parameter[] $params
+     */
+    public function setParams(array $params): void
+    {
+        $this->params = $params;
+    }
 
-	/**
-	 * @param string $url
-	 *
-	 * @return void
-	 */
-	public function setUrl(string $url): void {
-		$this->url = $url;
-	}
+    /**
+     * @return string
+     */
+    public function getPath(): string
+    {
+        return $this->path;
+    }
+
+    /**
+     * @param string $path
+     */
+    public function setPath(string $path): void
+    {
+        $this->path = $path;
+    }
+
+    /**
+     * @return string
+     */
+    public function getPayLoad(): string
+    {
+        return $this->payLoad;
+    }
+
+    /**
+     * @param string $payLoad
+     */
+    public function setPayLoad(string $payLoad): void
+    {
+        $this->payLoad = $payLoad;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUrl(): string
+    {
+        return $this->url;
+    }
+
+    /**
+     * @param string $url
+     *
+     * @return void
+     */
+    public function setUrl(string $url): void
+    {
+        $this->url = $url;
+    }
 }
