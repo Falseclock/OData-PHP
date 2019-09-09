@@ -3,7 +3,8 @@
 namespace Falseclock\OData\Server;
 
 use Composer\Autoload\ClassLoader;
-use Falseclock\OData\Helpers\Singleton;
+use Falseclock\DBD\Common\Singleton;
+
 
 class Configuration extends Singleton
 {

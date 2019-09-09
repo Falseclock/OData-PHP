@@ -15,10 +15,10 @@
 
 namespace Tests\Entities;
 
-use Falseclock\OData\DAO\Mapper;
-use Falseclock\OData\DAO\Model;
+use Falseclock\DBD\Entity\Entity;
+use Falseclock\DBD\Entity\Mapper;
 
-class TenderLotOption extends Model
+class TenderLotOption extends Entity
 {
     const TABLE = "tender.tender_lot_options";
     const TYPES = ['STRING', 'BOOLEAN', 'INTEGER', 'FLOAT', 'INTERVAL'];

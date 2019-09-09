@@ -13,10 +13,11 @@
 
 namespace Tests\Entities;
 
-use Falseclock\OData\DAO\Mapper;
-use Falseclock\OData\DAO\Model;
 
-class TenderLotState extends Model
+use Falseclock\DBD\Entity\Entity;
+use Falseclock\DBD\Entity\Mapper;
+
+class TenderLotState extends Entity
 {
     /**
      * ВНИМАНИЕ! После измнениея, удалением или добавления нового статуса, необходимо

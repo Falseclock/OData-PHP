@@ -13,10 +13,10 @@
 
 namespace Tests\Entities;
 
-use Falseclock\OData\DAO\Mapper;
-use Falseclock\OData\DAO\Model;
+use Falseclock\DBD\Entity\Entity;
+use Falseclock\DBD\Entity\Mapper;
 
-class TenderLotType extends Model
+class TenderLotType extends Entity
 {
     const CLASSIC = "CLASSIC";
     const COMMERCIAL_PROPOSAL = "COMMERCIAL_PROPOSAL";

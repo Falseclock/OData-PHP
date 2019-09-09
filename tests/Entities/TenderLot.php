@@ -13,10 +13,10 @@
 
 namespace Tests\Entities;
 
-use Falseclock\OData\DAO\Mapper;
-use Falseclock\OData\DAO\Model;
+use Falseclock\DBD\Entity\Entity;
+use Falseclock\DBD\Entity\Mapper;
 
-class TenderLot extends Model
+class TenderLot extends Entity
 {
     const TABLE = "tender.tender_lots";
     /** @var int $id */
