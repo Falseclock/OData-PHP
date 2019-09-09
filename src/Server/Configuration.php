@@ -5,7 +5,6 @@ namespace Falseclock\OData\Server;
 use Composer\Autoload\ClassLoader;
 use Falseclock\DBD\Common\Singleton;
 
-
 class Configuration extends Singleton
 {
     /** @var string $nameSpace */

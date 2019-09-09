@@ -1,18 +1,6 @@
 <?php
-/**
- * <description should be written here>
- *
- * @package      OData\Specification
- * @copyright    Copyright © Real Time Engineering, LLP - All Rights Reserved
- * @license      Proprietary and confidential
- * Unauthorized copying or using of this file, via any medium is strictly prohibited.
- * Content can not be copied and/or distributed without the express permission of Real Time Engineering, LLP
- *
- * @author       Written by Nurlan Mukhanov <nmukhanov@mp.kz>, сентябрь 2019
- */
 
 namespace Falseclock\OData\Specification;
-
 
 class Constants
 {
@@ -21,7 +9,6 @@ class Constants
 
     //Schema Namespace for Atom Publishing Protocol.
     const APP_NAMESPACE = 'http://www.w3.org/2007/app';
-
 
     const METADATA_NAMESPACE_PREFIX = 'metadata';
     const METADATA_NAMESPACE = "http://docs.oasis-open.org/odata/ns/metadata";
@@ -33,7 +20,6 @@ class Constants
 
     // Schema Namespace prefix For xml.
     const XML_NAMESPACE_PREFIX = 'xml';
-
 
     //XML attribute value to indicate the base URI for a document or element.
     const XML_BASE_ATTRIBUTE_NAME = 'base';
@@ -59,7 +45,6 @@ class Constants
      * @var string
      */
     const ATOM_NAMESPACE_PREFIX = 'atom';
-
 
     /**
      * XML prefix for the Atom Publishing Protocol namespace

@@ -11,6 +11,11 @@ class Response
     /** @var int $status */
     private $status;
 
+    public function __construct()
+    {
+        $this->headers[] = new Header("OData-Version", "4.0");
+    }
+
     /**
      * @return Header[]
      */
@@ -41,11 +46,6 @@ class Response
     public function setStatus(int $status): void
     {
         $this->status = $status;
-    }
-
-    public function __construct()
-    {
-        $this->headers[] = new Header("OData-Version", "4.0");
     }
 
     /**
