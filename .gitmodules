@@ -1,0 +1,3 @@
+[submodule "dbd-php-entity"]
+	path = vendor/falseclock/dbd-php-entity
+	url = https://github.com/Falseclock/dbd-php-entity

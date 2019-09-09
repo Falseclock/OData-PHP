@@ -3,8 +3,8 @@
 namespace Falseclock\OData\Writers;
 
 use Exception;
-use Falseclock\OData\Handlers\EntitiesProvider;
-use Falseclock\OData\Handlers\Entity;
+use Falseclock\OData\Edm\EdmEntitiesProvider;
+use Falseclock\OData\Edm\EdmEntity;
 use Falseclock\OData\Server\Configuration;
 
 abstract class BaseWriter implements Writer
@@ -19,11 +19,11 @@ abstract class BaseWriter implements Writer
     }
 
     /**
-     * @return Entity[]
+	 * @return EdmEntity[]
      * @throws Exception
      */
     protected function getEntities(): iterable
     {
-        return (new EntitiesProvider())->getEntities();
+		return (new EdmEntitiesProvider())->getEntities();
     }
 }

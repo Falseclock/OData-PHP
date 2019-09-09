@@ -1,19 +1,20 @@
 <?php
 
-namespace Falseclock\OData\Handlers;
+namespace Falseclock\OData\Edm;
 
 use Exception;
+use Falseclock\DBD\Entity\Entity;
 use Falseclock\OData\Server\Configuration;
 use ReflectionClass;
 
-class EntitiesProvider
+class EdmEntitiesProvider
 {
     public function __construct()
     {
     }
 
     /**
-     * @return Entity[]
+	 * @return EdmEntity[]
      * @throws Exception
      */
     public function getEntities(): iterable
@@ -22,11 +23,11 @@ class EntitiesProvider
         $entities = [];
         foreach ($config->getComposer()->getClassMap() as $className => $path) {
             if (strpos($className, $config->getEntityPath()) === 0) {
-                if (method_exists($className, 'map')) {
 
-                    $reflector = new ReflectionClass($className);
+				$reflector = new ReflectionClass($className);
 
-                    $entities[] = new Entity($className);
+				if($reflector->isSubclassOf(new ReflectionClass(Entity::class))) {
+					$entities[] = new EdmEntity($className);
                 }
             }
         }

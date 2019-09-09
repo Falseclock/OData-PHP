@@ -3,7 +3,7 @@
 namespace Falseclock\OData\Server;
 
 use Exception;
-use Falseclock\OData\Handlers\CRUDHandler;
+use Falseclock\OData\Edm\CRUDHandler;
 use Falseclock\OData\Server\Context\Request;
 use Falseclock\OData\Server\Context\Response;
 

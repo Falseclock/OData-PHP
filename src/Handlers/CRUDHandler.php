@@ -1,6 +1,6 @@
 <?php
 
-namespace Falseclock\OData\Handlers;
+namespace Falseclock\OData\Edm;
 
 use Exception;
 use Falseclock\OData\Server\Context\Request;

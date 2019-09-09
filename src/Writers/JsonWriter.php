@@ -5,6 +5,7 @@ namespace Falseclock\OData\Writers;
 use Exception;
 use Falseclock\OData\Server\Context\Request;
 use Falseclock\OData\Server\Context\Response;
+use Falseclock\OData\Specification\Constants;
 
 class JsonWriter extends BaseWriter
 {
@@ -37,7 +38,7 @@ class JsonWriter extends BaseWriter
     public function serviceDocument()
     {
         if ($this->request->getMetadata() != 'none') {
-            $this->writer['@context'] = $this->getBaseUrl() . '$metadata';
+			$this->writer['@context'] = $this->getBaseUrl() . Constants::METADATA;
         }
         $this->writer['value'] = [];
         foreach ($this->getEntities() as $entity) {
@@ -46,4 +47,8 @@ class JsonWriter extends BaseWriter
 
         return $this;
     }
+
+	public function metadata() {
+		// TODO: Implement metadata() method.
+	}
 }

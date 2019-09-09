@@ -1,10 +1,11 @@
 <?php
 
-namespace Falseclock\OData\Handlers;
+namespace Falseclock\OData\Edm;
 
 use Exception;
 use Falseclock\OData\Server\Context\Request;
 use Falseclock\OData\Server\Context\Response;
+use Falseclock\OData\Specification\Constants;
 use Falseclock\OData\Writers\AtomWriter;
 use Falseclock\OData\Writers\BaseWriter;
 use Falseclock\OData\Writers\JsonWriter;
@@ -48,6 +49,9 @@ abstract class BaseHandler
     {
         if (empty($this->request->getPath())) {
             $this->response->setPayLoad($this->writer->serviceDocument()->getStringOutput());
-        }
+		}
+		else if($this->request->getPath() == Constants::METADATA) {
+			$this->response->setPayLoad($this->writer->metadata()->getStringOutput());
+		}
     }
 }
