@@ -26,7 +26,8 @@
     "ext-json":                  "*",
     "ext-xmlwriter":             "*",
     "falseclock/dbd-php-entity": "^1.0",
-    "falseclock/dbd-php":        "dev-RealPrepareExecute"
+    "falseclock/dbd-php":        "dev-RealPrepareExecute",
+    "ext-pgsql":                 "*"
   },
   "require-dev":  {
     "symfony/var-dumper": "^3.3"
