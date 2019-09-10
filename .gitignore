@@ -6,3 +6,5 @@ vendor
 vendor/*
 /composer.lock
 /test.php
+/tests/createEntity.php
+/dbConnection.php
