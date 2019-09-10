@@ -10,26 +10,32 @@ use Falseclock\DBD\Entity\Primitive;
 class Tender extends Entity
 {
 	const TABLE = "tender.tenders_new";
+	/** @var int $id Идентификатор тендера, уникальный, серийный */
 	public $id;
-	public $name;
+	/** @var string $datePublication Дата опубликования тендера. Не путать с датой начало торгов. Публикация может быть раньше, чем начинается торговля */
 	public $datePublication;
+	/** @var string $oldData */
+	public $oldData;
+	/** @var boolean $isActive */
 	public $isActive;
-	/** @var User $User */
-	public $User;
-	/** @var TenderLot[] $TenderLots */
-	public    $TenderLots;
-	protected $json    = [];
-	protected $objects = [
-		'TenderLots' => TenderLot::class,
-		'User'       => User::class
-	];
 }
 
 class TenderMap extends Mapper
 {
-	public $id              = [ Column::NAME => "tender_id", Column::TYPE => Primitive::Int32, Column::NULLABLE => false ];
-	public $name            = [ Column::NAME => "tender_name", Column::TYPE => Primitive::String, Column::NULLABLE => false, Column::MAXLENGTH => 1024 ];
-	public $datePublication = [ Column::NAME => "tender_date_publication", Column::TYPE => Primitive::DateTimeOffset, Column::NULLABLE => false ];
-	public $isActive        = [ Column::NAME => "tender_is_active", Column::TYPE => Primitive::Boolean, Column::NULLABLE => false, Column::DEFAULT => true ];
+	public $id              = [
+		Column::NAME       => "tender_id",
+		Column::TYPE       => Primitive::Int32,
+		Column::DEFAULT    => "nextval('tenders_tenderid_seq'::regclass)",
+		Column::NULLABLE   => false,
+		Column::ANNOTATION => "Идентификатор тендера, уникальный, серийный"
+	];
+	public $datePublication = [
+		Column::NAME       => "tender_date_publication",
+		Column::TYPE       => Primitive::DateTimeOffset,
+		Column::NULLABLE   => true,
+		Column::PRECISION  => 6,
+		Column::ANNOTATION => "Дата опубликования тендера. Не путать с датой начало торгов. Публикация может быть раньше, чем начинается торговля"
+	];
+	public $oldData         = [ Column::NAME => "tender_old_data", Column::TYPE => Primitive::String, Column::NULLABLE => false ];
+	public $isActive        = [ Column::NAME => "tender_is_active", Column::TYPE => Primitive::Boolean, Column::DEFAULT => "true", Column::NULLABLE => false ];
 }
-

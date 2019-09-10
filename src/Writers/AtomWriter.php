@@ -46,6 +46,30 @@ class AtomWriter extends BaseWriter
 		$this->xmlWriter->writeAttribute(Constants::XMLNS_NAMESPACE_PREFIX, Constants::EDM_NAMESPACE);
 		$this->xmlWriter->writeAttribute(Constants::EDMX_VERSION, Constants::EDMX_VERSION_VALUE);
 
+		/*
+<edmx:Reference Uri="https://oasis-tcs.github.io/odata-vocabularies/vocabularies/Org.OData.Core.V1.xml">
+
+    <edmx:Include Namespace="Org.OData.Core.V1" Alias="Core">
+
+      <Annotation Term="Core.DefaultNamespace" />
+
+    </edmx:Include>
+
+  </edmx:Reference>
+				 */
+
+		$this->xmlWriter->startElementNs(Constants::EDMX_NAMESPACE_PREFIX, Constants::REFERENCE, Constants::REFERENCE_CORE_URI);
+		$this->xmlWriter->startElementNs(Constants::EDMX_NAMESPACE_PREFIX, Constants::INCLUDE, null);
+		$this->xmlWriter->writeAttribute(Constants::NAMESPACE, Constants::CORE_NAMESPACE);
+		$this->xmlWriter->writeAttribute(Constants::ALIAS, Constants::CORE_ALIAS);
+
+		$this->xmlWriter->startElement(Constants::ANNOTATION);
+		$this->xmlWriter->writeAttribute(Constants::TERM, Constants::CORE_REFERENCE_ANNOTATION_TERM);
+		$this->xmlWriter->endElement();
+
+		$this->xmlWriter->endElement();
+		$this->xmlWriter->endElement();
+
 		/**  <edmx:DataServices> */
 		$this->xmlWriter->startElementNs(Constants::EDMX_NAMESPACE_PREFIX, Constants::EDMX_DATASERVICES_ELEMENT, null);
 
@@ -76,6 +100,13 @@ class AtomWriter extends BaseWriter
 
 				if(isset($property->precision))
 					$this->xmlWriter->writeAttribute(Constants::PRECISION, $property->precision);
+
+				if(isset($property->annotation)) {
+					$this->xmlWriter->startElement(Constants::ANNOTATION);
+					$this->xmlWriter->writeAttribute(Constants::TERM, Constants::CORE_ANNOTATION_TERM);
+					$this->xmlWriter->writeAttribute(Constants::STRING, htmlspecialchars($property->annotation, ENT_XML1));
+					$this->xmlWriter->endElement();
+				}
 
 				$this->xmlWriter->endElement();
 			}

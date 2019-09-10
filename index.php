@@ -6,8 +6,6 @@ use Falseclock\OData\Server\Configuration;
 $composer = require('./vendor/autoload.php');
 
 try {
-	require_once('./dbConnection.php');
-
 	Configuration::me()->setContextPath("/rest/odata/")->setNameSpace("api.mp.kz")->setEntityPath("Tests\\Entities")->setComposer($composer);
 	$server = new Server();
 	$server->process()->out();
