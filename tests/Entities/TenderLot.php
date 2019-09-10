@@ -69,6 +69,7 @@ class TenderLot extends Entity
 
 class TenderLotMap extends Mapper
 {
+	/** @var Column $id */
 	public $id       = [ Column::NAME => "tender_lot_id", Column::TYPE => Primitive::Int32, Column::NULLABLE => false ];
 	public $name     = [ Column::NAME => "tender_lot_name", Column::TYPE => Primitive::String, Column::NULLABLE => false, Column::MAXLENGTH => 512 ];
 	public $quantity = [

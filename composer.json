@@ -1,32 +1,39 @@
 {
-  "name": "falseclock/odata-server-php",
-  "type": "library",
-  "description": "OData PHP Application server",
-  "keywords": [
+  "name":         "falseclock/odata-server-php",
+  "type":         "library",
+  "description":  "OData PHP Application server",
+  "keywords":     [
     "OData",
     "server",
     "REST",
     "API"
   ],
-  "license": "MIT",
-  "authors": [
+  "license":      "MIT",
+  "authors":      [
     {
-      "name": "Nurlan Mukhanov",
+      "name":  "Nurlan Mukhanov",
       "email": "nurike@gmail.com"
     }
   ],
-  "require": {
-    "php": "^7.1",
-    "ext-json": "*",
-    "ext-xmlwriter": "*",
-    "falseclock/dbd-php-entity": "^1.0"
+  "repositories": [
+    {
+      "type": "vcs",
+      "url":  "https://github.com/Falseclock/dbd-php"
+    }
+  ],
+  "require":      {
+    "php":                       "^7.1",
+    "ext-json":                  "*",
+    "ext-xmlwriter":             "*",
+    "falseclock/dbd-php-entity": "^1.0",
+    "falseclock/dbd-php":        "dev-RealPrepareExecute"
   },
-  "require-dev": {
+  "require-dev":  {
     "symfony/var-dumper": "^3.3"
   },
-  "suggest": {
+  "suggest":      {
   },
-  "autoload": {
+  "autoload":     {
     "psr-4": {
       "Falseclock\\OData\\": "src/"
     }
@@ -36,8 +43,8 @@
       "Tests\\": "tests/"
     }
   },
-  "config": {
+  "config":       {
     "optimize-autoloader": true,
-    "apcu-autoloader": true
+    "apcu-autoloader":     true
   }
 }
