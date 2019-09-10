@@ -153,6 +153,14 @@ class AtomWriter extends BaseWriter
 			$this->xmlWriter->endElement();
 		}
 
+		$this->xmlWriter->startElementNs(Constants::METADATA_NAMESPACE_PREFIX, Constants::SERVICE_DOCUMENT, null);
+		$this->xmlWriter->writeAttribute(Constants::ATOM_HREF_ATTRIBUTE_NAME, Constants::REFERENCE_CORE_URI);
+
+		$this->xmlWriter->startElementNs(Constants::ATOM_NAMESPACE_PREFIX, Constants::ATOM_TITLE_ELEMENT_NAME, null);
+		$this->xmlWriter->text(Constants::CORE_REFERENCE_ANNOTATION_TERM);
+		$this->xmlWriter->endElement();
+		$this->xmlWriter->endElement();
+
 		//End workspace and service nodes
 		$this->xmlWriter->endElement();
 		$this->xmlWriter->endElement();

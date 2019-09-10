@@ -84,4 +84,5 @@ class Constants
 	const STRING                         = "String";
 	const JSON_CSDL_VERSION              = "4.01";
 	const KIND                           = "Kind";
+	const SERVICE_DOCUMENT               = "service-document";
 }
