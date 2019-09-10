@@ -73,13 +73,15 @@ class Constants
 	const XML_NAMESPACE_PREFIX = 'xml';
 	const ANNOTATION = "Annotation";
 	const REFERENCE = "Reference";
-	const REFERENCE_CORE_URI = "http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/vocabularies/Org.OData.Core.V1.xml";
-	const INCLUDE            = "Include";
-	const CORE_NAMESPACE = "Org.OData.Core.V1";
+	const REFERENCE_CORE_URI             = "http://docs.oasis-open.org/odata/odata/v4.0/errata03/os/complete/vocabularies/Org.OData.Core.V1.xml";
+	const INCLUDE                        = "Include";
+	const CORE_NAMESPACE                 = "Org.OData.Core.V1";
 	const ALIAS                          = "Alias";
 	const CORE_ALIAS                     = "Core";
 	const CORE_REFERENCE_ANNOTATION_TERM = "Core.DefaultNamespace";
 	const CORE_ANNOTATION_TERM           = "Core.Description";
 	const TERM                           = "Term";
-	const STRING = "String";
+	const STRING                         = "String";
+	const JSON_CSDL_VERSION              = "4.01";
+	const KIND                           = "Kind";
 }
