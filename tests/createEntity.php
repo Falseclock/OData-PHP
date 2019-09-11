@@ -2,10 +2,9 @@
 
 $composer = require_once('../vendor/autoload.php');
 
+use DBD\Base\Utils as DBDUtils;
 use Falseclock\DBD\Common\Utils;
 use Falseclock\DBD\Entity\Column;
-
-;
 
 require_once('./dbConnection.php');
 
@@ -14,7 +13,7 @@ $SCHEME_NAME = "tender";
 $COLUMN_PREFIX = "tender_";
 $NAME_SPACE = "Tests\Entities";
 
-$columns = $db->tableStructure($TABLE_NAME, $SCHEME_NAME);
+$columns = DBDUtils::tableStructure($db, $TABLE_NAME, $SCHEME_NAME);
 
 $foo = 1;
 
