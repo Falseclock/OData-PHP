@@ -7,7 +7,6 @@ use Falseclock\OData\Server\Configuration;
 use Falseclock\OData\Server\Context\Request;
 use Falseclock\OData\Server\Context\Response;
 use Falseclock\OData\Specification\Constants;
-use POData\Common\ODataConstants;
 use XMLWriter;
 
 class AtomWriter extends BaseWriter
@@ -157,7 +156,7 @@ class AtomWriter extends BaseWriter
 		$this->xmlWriter->writeAttribute(Constants::ATOM_HREF_ATTRIBUTE_NAME, Constants::REFERENCE_CORE_URI);
 
 		$this->xmlWriter->startElementNs(Constants::ATOM_NAMESPACE_PREFIX, Constants::ATOM_TITLE_ELEMENT_NAME, null);
-		$this->xmlWriter->text(Constants::CORE_REFERENCE_ANNOTATION_TERM);
+		$this->xmlWriter->text(Constants::CORE_NAMESPACE);
 		$this->xmlWriter->endElement();
 		$this->xmlWriter->endElement();
 
