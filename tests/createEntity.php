@@ -8,8 +8,8 @@ use Falseclock\DBD\Entity\Column;
 
 require_once('./dbConnection.php');
 
-$TABLE_NAME = "tenders_new";
-$SCHEME_NAME = "tender";
+$TABLE_NAME = "tender_lot_attributes";
+$SCHEME_NAME = "odata";
 $COLUMN_PREFIX = "tender_";
 $NAME_SPACE = "Tests\Entities";
 
