@@ -27,7 +27,9 @@
     "ext-xmlwriter":             "*",
     "falseclock/dbd-php-entity": "^1.0",
     "falseclock/dbd-php":        "dev-RealPrepareExecute",
-    "ext-pgsql":                 "*"
+    "ext-pgsql":                 "*",
+    "ext-curl":                  "*",
+    "ext-memcache":              "*"
   },
   "require-dev":  {
     "symfony/var-dumper": "^3.3"
