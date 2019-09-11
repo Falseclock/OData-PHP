@@ -1,7 +1,7 @@
 <?php
 
-use DBD\Base\DBDConfig;
-use DBD\Base\DBDOptions;
+use DBD\Base\Config;
+use DBD\Base\Options;
 use DBD\Pg;
 
 require_once("./requisites.php");
@@ -17,8 +17,8 @@ require_once("./requisites.php");
  *
  */
 
-$config = new DBDConfig($DB_HOST, $DB_PORT, $DB_NAME, $DB_USER, $DB_PASSWORD, "odata-test");
-$options = new DBDOptions(true, true, true, true, true, true, true, true);
+$config = new Config($DB_HOST, $DB_PORT, $DB_NAME, $DB_USER, $DB_PASSWORD, "odata-test");
+$options = new Options(true, true, true, true, true, true, true, true);
 
 $db = new Pg($config, $options);
 $db->connect();
