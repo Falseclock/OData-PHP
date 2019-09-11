@@ -2,15 +2,15 @@
 
 $composer = require_once('../vendor/autoload.php');
 
-use DBD\Base\Utils as DBDUtils;
 use Falseclock\DBD\Common\Utils;
+use Falseclock\DBD\Common\Utils as DBDUtils;
 use Falseclock\DBD\Entity\Column;
 
 require_once('./dbConnection.php');
 
 $TABLE_NAME = "tender_lot_attributes";
-$SCHEME_NAME = "odata";
-$COLUMN_PREFIX = "tender_";
+$SCHEME_NAME = "tender";
+$COLUMN_PREFIX = "lot_attribute_";
 $NAME_SPACE = "Tests\Entities";
 
 $columns = DBDUtils::tableStructure($db, $TABLE_NAME, $SCHEME_NAME);
@@ -67,6 +67,8 @@ function getColumn(Column $column) {
 		$str .= sprintf(", Column::PRECISION => %s", $column->precision);
 	if(isset($column->annotation))
 		$str .= sprintf(", Column::ANNOTATION => \"%s\"", addcslashes(preg_replace('/\s\s+/', "; ", $column->annotation), "\""));
+	if(isset($column->key) and $column->key === true)
+		$str .= sprintf(", Column::KEY => %s", $column->key ? "true" : "false");
 
 	$str .= "]";
 
