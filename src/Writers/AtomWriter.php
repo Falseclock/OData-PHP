@@ -81,6 +81,24 @@ class AtomWriter extends BaseWriter
 			$this->xmlWriter->startElement(Constants::ENTITY_TYPE);
 			$this->xmlWriter->writeAttribute(Constants::NAME, $entity->getName());
 
+			// Write keys
+			$keys = [];
+			foreach($entity->getProperties() as $propertyName => $property) {
+				if(isset($property->key) and $property->key == true) {
+					$keys[] = $propertyName;
+				}
+			}
+
+			$this->xmlWriter->startElement(Constants::KEY);
+			foreach($keys as $key) {
+				$this->xmlWriter->startElement(Constants::PROPERTY_REF);
+				$this->xmlWriter->writeAttribute(Constants::NAME, $key);
+				$this->xmlWriter->endElement();
+			}
+			$this->xmlWriter->endElement();
+
+			//process fields
+
 			foreach($entity->getProperties() as $propertyName => $property) {
 				$this->xmlWriter->startElement(Constants::PROPERTY);
 				$this->xmlWriter->writeAttribute(Constants::PROPERTY_NAME, $propertyName);

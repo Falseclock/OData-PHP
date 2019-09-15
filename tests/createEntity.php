@@ -8,9 +8,9 @@ use Falseclock\DBD\Entity\Column;
 
 require_once('./dbConnection.php');
 
-$TABLE_NAME = "tender_lot_attributes";
+$TABLE_NAME = "tender_lots";
 $SCHEME_NAME = "tender";
-$COLUMN_PREFIX = "lot_attribute_";
+$COLUMN_PREFIX = "tender_lot_";
 $NAME_SPACE = "Tests\Entities";
 
 $columns = DBDUtils::tableStructure($db, $TABLE_NAME, $SCHEME_NAME);
@@ -24,7 +24,8 @@ echo "use Falseclock\DBD\Entity\Entity;\n";
 echo "use Falseclock\DBD\Entity\Mapper;\n";
 echo "use Falseclock\DBD\Entity\Primitive;\n";
 echo sprintf("\nclass %s extends Entity {\n", Utils::dashesToCamelCase($TABLE_NAME, true));
-echo sprintf("const TABLE = \"%s.%s\";\n", $SCHEME_NAME, $TABLE_NAME);
+echo sprintf("const TABLE = \"%s\";\n", $TABLE_NAME);
+echo sprintf("const SCHEME = \"%s\";\n", $SCHEME_NAME);
 foreach($columns as $column) {
 	$prefixLength = strlen($COLUMN_PREFIX);
 	if(strpos($column->name, $COLUMN_PREFIX) === 0) {
@@ -65,8 +66,10 @@ function getColumn(Column $column) {
 		$str .= sprintf(", Column::SCALE => %s", $column->scale);
 	if(isset($column->precision))
 		$str .= sprintf(", Column::PRECISION => %s", $column->precision);
+
 	if(isset($column->annotation))
 		$str .= sprintf(", Column::ANNOTATION => \"%s\"", addcslashes(preg_replace('/\s\s+/', "; ", $column->annotation), "\""));
+
 	if(isset($column->key) and $column->key === true)
 		$str .= sprintf(", Column::KEY => %s", $column->key ? "true" : "false");
 

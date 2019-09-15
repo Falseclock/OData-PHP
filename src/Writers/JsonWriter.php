@@ -49,6 +49,17 @@ class JsonWriter extends BaseWriter
 		$entities = [];
 		foreach($this->getEntities() as $entity) {
 			$entities[$entity->getName()] = [ '$' . Constants::KIND => Constants::ENTITY_TYPE ];
+
+			// Write keys
+			$keys = [];
+			foreach($entity->getProperties() as $propertyName => $property) {
+				if(isset($property->key) and $property->key == true) {
+					$keys[] = $propertyName;
+				}
+			}
+
+			$entities[$entity->getName()] = array_merge($entities[$entity->getName()], [ '$' . Constants::KEY => $keys ]);
+
 			foreach($entity->getProperties() as $columnName => $property) {
 				$column = [];
 				$column['$' . Constants::PROPERTY_TYPE] = Constants::PROPERTY_TYPE_PREFIX . $property->type->getValue();

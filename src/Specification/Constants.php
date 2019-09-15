@@ -85,4 +85,8 @@ class Constants
 	const JSON_CSDL_VERSION              = "4.01";
 	const KIND                           = "Kind";
 	const SERVICE_DOCUMENT               = "service-document";
+	// Key Element Name in csdl.
+	const KEY = 'Key';
+	// PropetyRef Element Name in csdl.
+	const PROPERTY_REF = 'PropertyRef';
 }

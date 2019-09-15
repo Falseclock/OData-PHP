@@ -9,7 +9,8 @@ use Falseclock\DBD\Entity\Primitive;
 
 class Tender extends Entity
 {
-	const TABLE = "tender.tenders_new";
+	const SCHEME = "tender";
+	const TABLE  = "tenders_new";
 	/** @var int $id Идентификатор тендера, уникальный, серийный */
 	public $id;
 	/** @var string $datePublication Дата опубликования тендера. Не путать с датой начало торгов. Публикация может быть раньше, чем начинается торговля */
@@ -23,19 +24,13 @@ class Tender extends Entity
 class TenderMap extends Mapper
 {
 	public $id              = [
-		Column::NAME       => "tender_id",
-		Column::TYPE       => Primitive::Int32,
-		Column::DEFAULT    => "nextval('tenders_tenderid_seq'::regclass)",
-		Column::NULLABLE   => false,
-		Column::ANNOTATION => "Идентификатор тендера, уникальный, серийный"
+		Column::NAME     => "tender_id",
+		Column::TYPE     => Primitive::Int32,
+		Column::DEFAULT  => "nextval('tenders_tenderid_seq'::regclass)",
+		Column::NULLABLE => false,
+		Column::KEY      => true
 	];
-	public $datePublication = [
-		Column::NAME       => "tender_date_publication",
-		Column::TYPE       => Primitive::DateTimeOffset,
-		Column::NULLABLE   => true,
-		Column::PRECISION  => 6,
-		Column::ANNOTATION => "Дата опубликования тендера. Не путать с датой начало торгов. Публикация может быть раньше, чем начинается торговля"
-	];
+	public $datePublication = [ Column::NAME => "tender_date_publication", Column::TYPE => Primitive::DateTimeOffset, Column::NULLABLE => false, Column::PRECISION => 6 ];
 	public $oldData         = [ Column::NAME => "tender_old_data", Column::TYPE => Primitive::String, Column::NULLABLE => false ];
 	public $isActive        = [ Column::NAME => "tender_is_active", Column::TYPE => Primitive::Boolean, Column::DEFAULT => "true", Column::NULLABLE => false ];
 }
