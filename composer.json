@@ -25,7 +25,7 @@
     "php":                       "^7.1",
     "ext-json":                  "*",
     "ext-xmlwriter":             "*",
-    "falseclock/dbd-php-entity": "^1.0",
+    "falseclock/dbd-php-entity": "dev-master",
     "falseclock/dbd-php":        "dev-RealPrepareExecute",
     "ext-pgsql":                 "*",
     "ext-curl":                  "*",
