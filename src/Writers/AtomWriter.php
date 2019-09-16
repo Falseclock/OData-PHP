@@ -83,7 +83,7 @@ class AtomWriter extends BaseWriter
 
 			// Write keys
 			$keys = [];
-			foreach($entity->getProperties() as $propertyName => $property) {
+			foreach($entity->getColumns() as $propertyName => $property) {
 				if(isset($property->key) and $property->key == true) {
 					$keys[] = $propertyName;
 				}
@@ -99,7 +99,7 @@ class AtomWriter extends BaseWriter
 
 			//process fields
 
-			foreach($entity->getProperties() as $propertyName => $property) {
+			foreach($entity->getColumns() as $propertyName => $property) {
 				$this->xmlWriter->startElement(Constants::PROPERTY);
 				$this->xmlWriter->writeAttribute(Constants::PROPERTY_NAME, $propertyName);
 				$this->xmlWriter->writeAttribute(Constants::PROPERTY_TYPE, Constants::PROPERTY_TYPE_PREFIX . $property->type->getValue());
@@ -121,14 +121,30 @@ class AtomWriter extends BaseWriter
 				if(isset($property->annotation)) {
 					$this->xmlWriter->startElement(Constants::ANNOTATION);
 					$this->xmlWriter->writeAttribute(Constants::TERM, Constants::CORE_ANNOTATION_TERM);
-					$this->xmlWriter->writeAttribute(Constants::STRING, htmlspecialchars($property->annotation, ENT_XML1));
+
+					$this->xmlWriter->startElement(Constants::STRING);
+					$this->xmlWriter->text(htmlspecialchars($property->annotation, ENT_XML1));
+					$this->xmlWriter->endElement();
+
 					$this->xmlWriter->endElement();
 				}
 
 				$this->xmlWriter->endElement();
 			}
 
-			/** </EntityType> */
+			$annotation = $entity->getAnnotation();
+			if (!empty($annotation)) {
+				$this->xmlWriter->startElement(Constants::ANNOTATION);
+				$this->xmlWriter->writeAttribute(Constants::TERM, Constants::CORE_ANNOTATION_TERM);
+
+				$this->xmlWriter->startElement(Constants::STRING);
+				$this->xmlWriter->text(htmlspecialchars($annotation, ENT_XML1));
+				$this->xmlWriter->endElement();
+
+				$this->xmlWriter->endElement();
+			}
+
+				/** </EntityType> */
 			$this->xmlWriter->endElement();
 		}
 

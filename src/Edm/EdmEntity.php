@@ -11,8 +11,8 @@ class EdmEntity
 {
 	/** @var Entity|string */
 	private $className;
-	/** @var Mapper $annotation */
-	private $annotation;
+	/** @var Mapper $mapping */
+	private $mapping;
 
 	/**
 	 * EdmEntity constructor.
@@ -23,7 +23,7 @@ class EdmEntity
 	 */
 	public function __construct(string $className) {
 		$this->className = $className;
-		$this->annotation = $className::map();
+		$this->mapping = $className::mappingClass();
 	}
 
 	public function getName(): string {
@@ -33,9 +33,16 @@ class EdmEntity
 	/**
 	 * @return Column[]
 	 */
-	public function getProperties(): iterable {
-		$properties = get_object_vars($this->annotation);
+	public function getColumns(): iterable {
+		$properties = get_object_vars($this->mapping);
 
 		return $properties;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getAnnotation() {
+		return $this->mapping->annotation();
 	}
 }

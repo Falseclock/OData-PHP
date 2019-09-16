@@ -43,8 +43,7 @@ class TenderLot extends Entity
 
 class TenderLotMap extends Mapper
 {
-	const ANNOTATION = "";
-
+	const ANNOTATION = "Таблица лотов, которые принадлежат определенному тендеру.; Вниание на опции тендера. Через coalesce проверяется есть ли кастомная опция для лота, затем проверяется настройка для компании и потом только берется стандартная настройка";
 	public $id               = [
 		Column::NAME       => "tender_lot_id",
 		Column::TYPE       => Primitive::Int32,

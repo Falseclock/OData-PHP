@@ -8,9 +8,9 @@ use Falseclock\DBD\Entity\Column;
 
 require_once('./dbConnection.php');
 
-$TABLE_NAME = "tender_lots";
+$TABLE_NAME = "tenders_new";
 $SCHEME_NAME = "tender";
-$COLUMN_PREFIX = "tender_lot_";
+$COLUMN_PREFIX = "tender_";
 $NAME_SPACE = "Tests\Entities";
 
 $table = DBDUtils::tableStructure($db, $TABLE_NAME, $SCHEME_NAME);

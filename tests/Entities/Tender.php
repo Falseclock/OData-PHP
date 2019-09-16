@@ -23,16 +23,21 @@ class Tender extends Entity
 
 class TenderMap extends Mapper
 {
-	const ANNOTATION = "";
-
+	const ANNOTATION = "Таблица тендеров, которая аккумулирует в себя лоты";
 	public $id              = [
-		Column::NAME     => "tender_id",
-		Column::TYPE     => Primitive::Int32,
-		Column::DEFAULT  => "nextval('tenders_tenderid_seq'::regclass)",
-		Column::NULLABLE => false,
-		Column::KEY      => true
+		Column::NAME       => "tender_id",
+		Column::TYPE       => Primitive::Int32,
+		Column::DEFAULT    => "nextval('tenders_tenderid_seq'::regclass)",
+		Column::NULLABLE   => false,
+		Column::ANNOTATION => "Идентификатор тендера, уникальный, серийный",
+		Column::KEY        => true
 	];
-	public $datePublication = [ Column::NAME => "tender_date_publication", Column::TYPE => Primitive::DateTimeOffset, Column::NULLABLE => false, Column::PRECISION => 6 ];
+	public $datePublication = [ Column::NAME       => "tender_date_publication",
+								Column::TYPE       => Primitive::DateTimeOffset,
+								Column::NULLABLE   => false,
+								Column::PRECISION  => 6,
+								Column::ANNOTATION => "Дата опубликования тендера. Не путать с датой начало торгов. Публикация может быть раньше, чем начинается торговля"
+	];
 	public $oldData         = [ Column::NAME => "tender_old_data", Column::TYPE => Primitive::String, Column::NULLABLE => false ];
 	public $isActive        = [ Column::NAME => "tender_is_active", Column::TYPE => Primitive::Boolean, Column::DEFAULT => "true", Column::NULLABLE => false ];
 }

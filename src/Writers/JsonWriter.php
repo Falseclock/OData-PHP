@@ -52,7 +52,7 @@ class JsonWriter extends BaseWriter
 
 			// Write keys
 			$keys = [];
-			foreach($entity->getProperties() as $propertyName => $property) {
+			foreach($entity->getColumns() as $propertyName => $property) {
 				if(isset($property->key) and $property->key == true) {
 					$keys[] = $propertyName;
 				}
@@ -60,7 +60,7 @@ class JsonWriter extends BaseWriter
 
 			$entities[$entity->getName()] = array_merge($entities[$entity->getName()], [ '$' . Constants::KEY => $keys ]);
 
-			foreach($entity->getProperties() as $columnName => $property) {
+			foreach($entity->getColumns() as $columnName => $property) {
 				$column = [];
 				$column['$' . Constants::PROPERTY_TYPE] = Constants::PROPERTY_TYPE_PREFIX . $property->type->getValue();
 				if(isset($property->defaultValue))
@@ -82,6 +82,12 @@ class JsonWriter extends BaseWriter
 					$column['@' . Constants::CORE_ANNOTATION_TERM . '#'] = $property->annotation;
 
 				$entities[$entity->getName()] = array_merge($entities[$entity->getName()], [ $columnName => $column ]);
+			}
+
+			// "@Core.Description#": "Таблица валют"
+			$annotation = $entity->getAnnotation();
+			if(!empty($annotation)) {
+				$entities[$entity->getName()] = array_merge($entities[$entity->getName()], [ '@' . Constants::CORE_ANNOTATION_TERM => $annotation ]);
 			}
 		}
 		$this->writer[Configuration::me()->getNameSpace()] = (object) $entities;
