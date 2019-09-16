@@ -13,7 +13,7 @@ $SCHEME_NAME = "tender";
 $COLUMN_PREFIX = "tender_lot_";
 $NAME_SPACE = "Tests\Entities";
 
-$columns = DBDUtils::tableStructure($db, $TABLE_NAME, $SCHEME_NAME);
+$table = DBDUtils::tableStructure($db, $TABLE_NAME, $SCHEME_NAME);
 
 $foo = 1;
 
@@ -26,7 +26,7 @@ echo "use Falseclock\DBD\Entity\Primitive;\n";
 echo sprintf("\nclass %s extends Entity {\n", Utils::dashesToCamelCase($TABLE_NAME, true));
 echo sprintf("const TABLE = \"%s\";\n", $TABLE_NAME);
 echo sprintf("const SCHEME = \"%s\";\n", $SCHEME_NAME);
-foreach($columns as $column) {
+foreach($table->columns as $column) {
 	$prefixLength = strlen($COLUMN_PREFIX);
 	if(strpos($column->name, $COLUMN_PREFIX) === 0) {
 		$columnName = Utils::dashesToCamelCase(substr($column->name, $prefixLength));
@@ -42,8 +42,15 @@ foreach($columns as $column) {
 }
 echo "}\n\n";
 
+$table->annotation = htmlspecialchars($table->annotation, ENT_COMPAT);
+$table->annotation = str_replace(array("\r", "\\r"), "", $table->annotation);
+$table->annotation = str_replace("\\n", "\n", $table->annotation);
+$table->annotation = preg_replace('/\s\s+/', "; ", $table->annotation);
+
 echo sprintf("class %sMap extends Mapper {\n", Utils::dashesToCamelCase($TABLE_NAME, true));
-foreach($columns as $column) {
+echo sprintf("const ANNOTATION = \"%s\";\n", $table->annotation);
+
+foreach($table->columns as $column) {
 	$prefixLength = strlen($COLUMN_PREFIX);
 	if(strpos($column->name, $COLUMN_PREFIX) === 0) {
 		$columnName = Utils::dashesToCamelCase(substr($column->name, $prefixLength));
