@@ -62,7 +62,9 @@ echo "use Falseclock\DBD\Entity\Column;\n";
 echo "use Falseclock\DBD\Entity\Entity;\n";
 echo "use Falseclock\DBD\Entity\Mapper;\n";
 echo "use Falseclock\DBD\Entity\Primitive;\n";
-echo sprintf("\nclass %s extends Entity {\n", Utils::dashesToCamelCase($TABLE_NAME, true));
+$entityName = Utils::dashesToCamelCase($TABLE_NAME, true);
+
+echo sprintf("\nclass %s extends Entity {\n", $entityName);
 echo sprintf("const TABLE = \"%s\";\n", $TABLE_NAME);
 echo sprintf("const SCHEME = \"%s\";\n", $SCHEME_NAME);
 foreach($table->columns as $column) {
@@ -70,10 +72,11 @@ foreach($table->columns as $column) {
 	if(strpos($column->name, $COLUMN_PREFIX) === 0) {
 		$columnName = Utils::dashesToCamelCase(substr($column->name, $prefixLength));
 
-		echo sprintf("/** @var %s \$%s %s */\n",
+		echo sprintf("/**\n* %s \n*\n* @var %s\n* @see %sMap::\$%s */\n",
+					 preg_replace('/\s\s+/', "; ", $column->annotation),
 					 $column->type->getPhpVarType(),
-					 $columnName,
-					 preg_replace('/\s\s+/', "; ", $column->annotation)
+					 $entityName,
+					 $columnName
 		);
 
 		echo sprintf("public \$%s;\n", $columnName);
@@ -106,7 +109,7 @@ foreach($table->columns as $column) {
 	$prefixLength = strlen($COLUMN_PREFIX);
 	if(strpos($column->name, $COLUMN_PREFIX) === 0) {
 		$columnName = Utils::dashesToCamelCase(substr($column->name, $prefixLength));
-		echo sprintf("public \$%s = %s;\n", $columnName, getColumn($column));
+		echo sprintf("/** @see %s::%s */\n public \$%s = %s;\n", $entityName, $columnName, $columnName, getColumn($column));
 	}
 }
 
@@ -131,6 +134,9 @@ function getColumn(Column $column) {
 
 	if(isset($column->key) and $column->key === true)
 		$str .= sprintf(", Column::KEY => %s", $column->key ? "true" : "false");
+
+	if(isset($column->originType))
+		$str .= sprintf(", Column::ORIGIN_TYPE => %s", $column->originType);
 
 	$str .= "]";
 

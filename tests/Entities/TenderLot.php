@@ -7,37 +7,107 @@ use Falseclock\DBD\Entity\Entity;
 use Falseclock\DBD\Entity\Mapper;
 use Falseclock\DBD\Entity\Primitive;
 
-class TenderLot extends Entity
+class TenderLots extends Entity
 {
 	const SCHEME = "tender";
 	const TABLE  = "tender_lots";
-	/** @var int $id Номер тендерного лота, уникальный, серийный */
+	/**
+	 * Номер тендерного лота, уникальный, серийный
+	 *
+	 * @var int
+	 * @see TenderLotsMap::$id
+	 */
 	public $id;
-	/** @var string $name Наименовение лота */
+	/**
+	 * Наименовение лота
+	 *
+	 * @var string
+	 * @see TenderLotsMap::$name
+	 */
 	public $name;
-	/** @var string $description Более расширенное описание лота */
+	/**
+	 * Более расширенное описание лота
+	 *
+	 * @var string
+	 * @see TenderLotsMap::$description
+	 */
 	public $description;
-	/** @var string $budget Бюджет лота за единицу товара или услуги */
+	/**
+	 * Бюджет лота за единицу товара или услуги
+	 *
+	 * @var string
+	 * @see TenderLotsMap::$budget
+	 */
 	public $budget;
-	/** @var string $quantity Количество поставляемых товаров или услуг */
+	/**
+	 * Количество поставляемых товаров или услуг
+	 *
+	 * @var string
+	 * @see TenderLotsMap::$quantity
+	 */
 	public $quantity;
-	/** @var string $dateStart Дата начала приема заявок по лоту */
+	/**
+	 * Дата начала приема заявок по лоту
+	 *
+	 * @var string
+	 * @see TenderLotsMap::$dateStart
+	 */
 	public $dateStart;
-	/** @var string $dateStop Дата окончания приема заявок. Лот может автоматически продлятся и эта дата ответственна за это */
+	/**
+	 * Дата окончания приема заявок. Лот может автоматически продлятся и эта дата ответственна за это
+	 *
+	 * @var string
+	 * @see TenderLotsMap::$dateStop
+	 */
 	public $dateStop;
-	/** @var string $fts Полнотекстовый поиск по лоту; FIXME: изменить на not null после ввода новой страницы создания лота */
+	/**
+	 * Полнотекстовый поиск по лоту; FIXME: изменить на not null после ввода новой страницы создания лота
+	 *
+	 * @var string
+	 * @see TenderLotsMap::$fts
+	 */
 	public $fts;
-	/** @var boolean $isActive Статус достуности лота к публичному показу. По сути это статус удаления */
+	/**
+	 * Статус достуности лота к публичному показу. По сути это статус удаления
+	 *
+	 * @var boolean
+	 * @see TenderLotsMap::$isActive
+	 */
 	public $isActive;
-	/** @var string $stateExplanation Комментарий к статусу лота. Обычно устанавливается, когда статус изменяется на невозможный к дальнейшему участию в лоте */
+	/**
+	 * Комментарий к статусу лота. Обычно устанавливается, когда статус изменяется на невозможный к дальнейшему участию в лоте
+	 *
+	 * @var string
+	 * @see TenderLotsMap::$stateExplanation
+	 */
 	public $stateExplanation;
-	/** @var int $typeId Ссылка на тип лота */
+	/**
+	 * Ссылка на тип лота
+	 *
+	 * @var int
+	 * @see TenderLotsMap::$typeId
+	 */
 	public $typeId;
-	/** @var int $stateId Ссылка на статус лота в тендерах */
+	/**
+	 * Ссылка на статус лота в тендерах
+	 *
+	 * @var int
+	 * @see TenderLotsMap::$stateId
+	 */
 	public $stateId;
-	/** @var boolean $isPublic Доступ к лоту */
+	/**
+	 * Доступ к лоту
+	 *
+	 * @var boolean
+	 * @see TenderLotsMap::$isPublic
+	 */
 	public $isPublic;
-	/** @var string $dateCommit */
+	/**
+	 *
+	 *
+	 * @var string
+	 * @see TenderLotsMap::$dateCommit
+	 */
 	public $dateCommit;
 	/** @var TenderLotStates $TenderLotStates Таблица видов состояний каждого лота тендера */
 	public $TenderLotStates;
@@ -47,10 +117,11 @@ class TenderLot extends Entity
 	public $TendersNew;
 }
 
-class TenderLotMap extends Mapper
+class TenderLotsMap extends Mapper
 {
 	const ANNOTATION = "Таблица лотов, которые принадлежат определенному тендеру.; Вниание на опции тендера. Через coalesce проверяется есть ли кастомная опция для лота, затем проверяется настройка для компании и потом только берется стандартная настройка";
-	public $id               = [
+	/** @see TenderLots::id */
+	public $id = [
 		Column::NAME       => "tender_lot_id",
 		Column::TYPE       => Primitive::Int32,
 		Column::DEFAULT    => "nextval('auctions_auctionid_seq'::regclass)",
@@ -58,20 +129,23 @@ class TenderLotMap extends Mapper
 		Column::ANNOTATION => "Номер тендерного лота, уникальный, серийный",
 		Column::KEY        => true
 	];
-	public $name             = [
+	/** @see TenderLots::name */
+	public $name = [
 		Column::NAME       => "tender_lot_name",
 		Column::TYPE       => Primitive::String,
 		Column::NULLABLE   => false,
 		Column::MAXLENGTH  => 512,
 		Column::ANNOTATION => "Наименовение лота"
 	];
-	public $description      = [
+	/** @see TenderLots::description */
+	public $description = [
 		Column::NAME       => "tender_lot_description",
 		Column::TYPE       => Primitive::String,
 		Column::NULLABLE   => false,
 		Column::ANNOTATION => "Более расширенное описание лота"
 	];
-	public $budget           = [
+	/** @see TenderLots::budget */
+	public $budget = [
 		Column::NAME       => "tender_lot_budget",
 		Column::TYPE       => Primitive::Decimal,
 		Column::DEFAULT    => "0",
@@ -80,7 +154,8 @@ class TenderLotMap extends Mapper
 		Column::PRECISION  => 30,
 		Column::ANNOTATION => "Бюджет лота за единицу товара или услуги"
 	];
-	public $quantity         = [
+	/** @see TenderLots::quantity */
+	public $quantity = [
 		Column::NAME       => "tender_lot_quantity",
 		Column::TYPE       => Primitive::Decimal,
 		Column::DEFAULT    => "0",
@@ -89,7 +164,8 @@ class TenderLotMap extends Mapper
 		Column::PRECISION  => 22,
 		Column::ANNOTATION => "Количество поставляемых товаров или услуг"
 	];
-	public $dateStart        = [
+	/** @see TenderLots::dateStart */
+	public $dateStart = [
 		Column::NAME       => "tender_lot_date_start",
 		Column::TYPE       => Primitive::DateTimeOffset,
 		Column::DEFAULT    => "now()",
@@ -97,50 +173,53 @@ class TenderLotMap extends Mapper
 		Column::PRECISION  => 6,
 		Column::ANNOTATION => "Дата начала приема заявок по лоту"
 	];
-	public $dateStop         = [
+	/** @see TenderLots::dateStop */
+	public $dateStop = [
 		Column::NAME       => "tender_lot_date_stop",
 		Column::TYPE       => Primitive::DateTimeOffset,
 		Column::NULLABLE   => false,
 		Column::PRECISION  => 6,
 		Column::ANNOTATION => "Дата окончания приема заявок. Лот может автоматически продлятся и эта дата ответственна за это"
 	];
-	public $fts              = [
+	/** @see TenderLots::fts */
+	public $fts = [
 		Column::NAME       => "tender_lot_fts",
 		Column::TYPE       => Primitive::String,
 		Column::NULLABLE   => false,
 		Column::ANNOTATION => "Полнотекстовый поиск по лоту; FIXME: изменить на not null после ввода новой страницы создания лота"
 	];
-	public $isActive         = [
+	/** @see TenderLots::isActive */
+	public $isActive = [
 		Column::NAME       => "tender_lot_is_active",
 		Column::TYPE       => Primitive::Boolean,
 		Column::DEFAULT    => "true",
 		Column::NULLABLE   => false,
 		Column::ANNOTATION => "Статус достуности лота к публичному показу. По сути это статус удаления"
 	];
+	/** @see TenderLots::stateExplanation */
 	public $stateExplanation = [
 		Column::NAME       => "tender_lot_state_explanation",
 		Column::TYPE       => Primitive::String,
 		Column::NULLABLE   => false,
 		Column::ANNOTATION => "Комментарий к статусу лота. Обычно устанавливается, когда статус изменяется на невозможный к дальнейшему участию в лоте"
 	];
-	public $typeId           = [
-		Column::NAME       => "tender_lot_type_id",
-		Column::TYPE       => Primitive::Int32,
-		Column::NULLABLE   => false,
-		Column::ANNOTATION => "Ссылка на тип лота"
-	];
-	public $stateId          = [
+	/** @see TenderLots::typeId */
+	public $typeId = [ Column::NAME => "tender_lot_type_id", Column::TYPE => Primitive::Int32, Column::NULLABLE => false, Column::ANNOTATION => "Ссылка на тип лота" ];
+	/** @see TenderLots::stateId */
+	public $stateId = [
 		Column::NAME       => "tender_lot_state_id",
 		Column::TYPE       => Primitive::Int32,
 		Column::NULLABLE   => false,
 		Column::ANNOTATION => "Ссылка на статус лота в тендерах"
 	];
-	public $isPublic         = [
+	/** @see TenderLots::isPublic */
+	public $isPublic = [
 		Column::NAME       => "tender_lot_is_public",
 		Column::TYPE       => Primitive::Boolean,
 		Column::DEFAULT    => "true",
 		Column::NULLABLE   => false,
 		Column::ANNOTATION => "Доступ к лоту"
 	];
-	public $dateCommit       = [ Column::NAME => "tender_lot_date_commit", Column::TYPE => Primitive::DateTimeOffset, Column::NULLABLE => false, Column::PRECISION => 6 ];
+	/** @see TenderLots::dateCommit */
+	public $dateCommit = [ Column::NAME => "tender_lot_date_commit", Column::TYPE => Primitive::DateTimeOffset, Column::NULLABLE => false, Column::PRECISION => 6 ];
 }
