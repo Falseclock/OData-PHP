@@ -43,6 +43,8 @@ class TenderLot extends Entity
 
 class TenderLotMap extends Mapper
 {
+	const ANNOTATION = "";
+
 	public $id               = [
 		Column::NAME       => "tender_lot_id",
 		Column::TYPE       => Primitive::Int32,
