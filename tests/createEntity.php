@@ -8,11 +8,12 @@ use Falseclock\DBD\Entity\Column;
 
 require_once('./dbConnection.php');
 
-$TABLE_NAME = "tenders_new";
+$TABLE_NAME = "tender_lots";
 $SCHEME_NAME = "tender";
-$COLUMN_PREFIX = "tender_";
+$COLUMN_PREFIX = "tender_lot_";
 $NAME_SPACE = "Tests\Entities";
 
+/** @noinspection PhpUnhandledExceptionInspection */
 $table = DBDUtils::tableStructure($db, $TABLE_NAME, $SCHEME_NAME);
 
 $foo = 1;
@@ -43,7 +44,7 @@ foreach($table->columns as $column) {
 echo "}\n\n";
 
 $table->annotation = htmlspecialchars($table->annotation, ENT_COMPAT);
-$table->annotation = str_replace(array("\r", "\\r"), "", $table->annotation);
+$table->annotation = str_replace([ "\r", "\\r" ], "", $table->annotation);
 $table->annotation = str_replace("\\n", "\n", $table->annotation);
 $table->annotation = preg_replace('/\s\s+/', "; ", $table->annotation);
 
