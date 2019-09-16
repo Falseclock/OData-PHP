@@ -5,6 +5,7 @@ $composer = require_once('../vendor/autoload.php');
 use Falseclock\DBD\Common\Utils;
 use Falseclock\DBD\Common\Utils as DBDUtils;
 use Falseclock\DBD\Entity\Column;
+use Falseclock\DBD\Entity\Join;
 
 require_once('./dbConnection.php');
 
@@ -15,6 +16,43 @@ $NAME_SPACE = "Tests\Entities";
 
 /** @noinspection PhpUnhandledExceptionInspection */
 $table = DBDUtils::tableStructure($db, $TABLE_NAME, $SCHEME_NAME);
+
+// Set joins properly
+foreach($table->constraints as $constraint) {
+	if(!isset($constraint->join)) {
+
+		$choices = [];
+
+		$r = new ReflectionClass(Join::class);
+		$constants = $r->getConstants();
+
+		foreach($constants as $name => $value) {
+			$choices[] = $value;
+		}
+
+		$choice = readStdin("Set how {$constraint->foreignTable->name}({$constraint->foreignColumn->name}) refers {$table->name}({$constraint->column->name})",
+							$choices
+		);
+
+		switch($choices[$choice]) {
+			case Join::ONE_TO_ONE:
+				$constraint->join = new Join\OneToOne();
+				break;
+			case Join::ONE_TO_MANY:
+				$constraint->join = new Join\OneToMany();
+				break;
+			case Join::MANY_TO_ONE:
+				$constraint->join = new Join\ManyToOne();
+				break;
+			case Join::MANY_TO_MANY:
+				$constraint->join = new Join\ManyToMany();
+				break;
+			default:
+				/** @noinspection PhpUnhandledExceptionInspection */
+				throw new Exception("Unknown join type");
+		}
+	}
+}
 
 $foo = 1;
 
@@ -39,6 +77,19 @@ foreach($table->columns as $column) {
 		);
 
 		echo sprintf("public \$%s;\n", $columnName);
+	}
+}
+foreach($table->constraints as $constraint) {
+	$foreignTableName = Utils::dashesToCamelCase($constraint->foreignTable->name, true);
+	switch(true) {
+		case $constraint->join instanceof Join\ManyToMany:
+			echo sprintf("/** @var %s[] \$%s %s*/\npublic \$%s = [];\n", $foreignTableName, $foreignTableName, $constraint->foreignTable->annotation, $foreignTableName);
+			break;
+		case $constraint->join instanceof Join\ManyToOne:
+		case $constraint->join instanceof Join\OneToMany:
+		case $constraint->join instanceof Join\OneToOne:
+			echo sprintf("/** @var %s \$%s %s*/\npublic \$%s;\n", $foreignTableName, $foreignTableName, $constraint->foreignTable->annotation, $foreignTableName);
+			break;
 	}
 }
 echo "}\n\n";
@@ -84,4 +135,25 @@ function getColumn(Column $column) {
 	$str .= "]";
 
 	return $str;
+}
+
+function readStdin(string $prompt, iterable $inputs) {
+	echo sprintf("%s\n", $prompt);
+	foreach($inputs as $number => $value) {
+		echo sprintf("  %d: %s\n", $number, $value);
+	}
+
+	$handle = fopen("php://stdin", "r") or die($php_errormsg);
+
+	$line = intval(trim(fgets($handle)));
+
+	if(!isset($inputs[$line])) {
+		echo "WRONG choice!\n";
+		readStdin($prompt, $inputs);
+	}
+	else {
+		fclose($handle);
+	}
+
+	return $line;
 }

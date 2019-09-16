@@ -39,6 +39,12 @@ class TenderLot extends Entity
 	public $isPublic;
 	/** @var string $dateCommit */
 	public $dateCommit;
+	/** @var TenderLotStates $TenderLotStates Таблица видов состояний каждого лота тендера */
+	public $TenderLotStates;
+	/** @var TenderLotTypes $TenderLotTypes Типы закупа в тендерных лотах */
+	public $TenderLotTypes;
+	/** @var TendersNew $TendersNew Таблица тендеров, которая аккумулирует в себя лоты */
+	public $TendersNew;
 }
 
 class TenderLotMap extends Mapper
