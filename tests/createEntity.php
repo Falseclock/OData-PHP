@@ -5,6 +5,7 @@ $composer = require_once('../vendor/autoload.php');
 use Falseclock\DBD\Common\Utils;
 use Falseclock\DBD\Common\Utils as DBDUtils;
 use Falseclock\DBD\Entity\Column;
+use Falseclock\DBD\Entity\Constraint;
 use Falseclock\DBD\Entity\Join;
 
 require_once('./dbConnection.php');
@@ -59,7 +60,9 @@ $foo = 1;
 echo "<?php\n\n";
 echo "namespace {$NAME_SPACE};\n\n";
 echo "use Falseclock\DBD\Entity\Column;\n";
+echo "use Falseclock\DBD\Entity\Constraint;\n";
 echo "use Falseclock\DBD\Entity\Entity;\n";
+echo "use Falseclock\DBD\Entity\Join;\n";
 echo "use Falseclock\DBD\Entity\Mapper;\n";
 echo "use Falseclock\DBD\Entity\Primitive;\n";
 $entityName = Utils::dashesToCamelCase($TABLE_NAME, true);
@@ -72,7 +75,7 @@ foreach($table->columns as $column) {
 	if(strpos($column->name, $COLUMN_PREFIX) === 0) {
 		$columnName = Utils::dashesToCamelCase(substr($column->name, $prefixLength));
 
-		echo sprintf("/**\n* %s \n*\n* @var %s\n* @see %sMap::\$%s */\n",
+		echo sprintf("/**\n* %s \n*\n* @var %s\n* @see %sMap::%s */\n",
 					 preg_replace('/\s\s+/', "; ", $column->annotation),
 					 $column->type->getPhpVarType(),
 					 $entityName,
@@ -91,8 +94,14 @@ foreach($table->constraints as $constraint) {
 		case $constraint->join instanceof Join\ManyToOne:
 		case $constraint->join instanceof Join\OneToMany:
 		case $constraint->join instanceof Join\OneToOne:
-			echo sprintf("/** @var %s \$%s %s*/\npublic \$%s;\n", $foreignTableName, $foreignTableName, $constraint->foreignTable->annotation, $foreignTableName);
-			break;
+
+			echo sprintf("/**\n* %s \n*\n* @var %s\n* @see %sMap::%s */\npublic $%s;\n",
+						 preg_replace('/\s\s+/', "; ", $constraint->foreignTable->annotation),
+						 $foreignTableName,
+						 $entityName,
+						 $foreignTableName,
+						 $foreignTableName
+			);
 	}
 }
 echo "}\n\n";
@@ -113,19 +122,42 @@ foreach($table->columns as $column) {
 	}
 }
 
+foreach($table->constraints as $constraint) {
+	$varName = Utils::dashesToCamelCase($constraint->foreignTable->name, true);
+	echo sprintf("/** @see %s::%s */\n protected \$%s = %s;\n", $entityName, $varName, $varName, getReference($constraint));
+}
+
 echo "}\n";
+
+function getReference(Constraint $constraint) {
+	$str = sprintf("[ Constraint::COLUMN => \"%s\"", $constraint->column->name);
+	$str .= sprintf(", Constraint::FOREIGN_SCHEME => \"%s\"", $constraint->foreignTable->scheme);
+	$str .= sprintf(", Constraint::FOREIGN_TABLE => \"%s\"", $constraint->foreignTable->name);
+	$str .= sprintf(", Constraint::FOREIGN_COLUMN => \"%s\"", $constraint->foreignColumn->name);
+	/** @noinspection PhpUnhandledExceptionInspection */
+	$str .= sprintf(", Constraint::JOIN_TYPE => Join::%s", $constraint->join->getConstantName());
+
+	$str .= "]";
+
+	return $str;
+}
 
 function getColumn(Column $column) {
 	$str = sprintf("[ Column::NAME => \"%s\"", $column->name);
 	$str .= sprintf(", Column::TYPE => Primitive::%s", $column->type->getValue());
+
 	if(isset($column->defaultValue))
 		$str .= sprintf(", Column::DEFAULT => \"%s\"", addcslashes($column->defaultValue, "\""));
+
 	if(isset($column->nullable))
 		$str .= sprintf(", Column::NULLABLE => %s", $column->nullable ? "true" : "false");
+
 	if(isset($column->maxLength))
 		$str .= sprintf(", Column::MAXLENGTH => %d", $column->maxLength);
+
 	if(isset($column->scale))
 		$str .= sprintf(", Column::SCALE => %s", $column->scale);
+
 	if(isset($column->precision))
 		$str .= sprintf(", Column::PRECISION => %s", $column->precision);
 
@@ -136,7 +168,7 @@ function getColumn(Column $column) {
 		$str .= sprintf(", Column::KEY => %s", $column->key ? "true" : "false");
 
 	if(isset($column->originType))
-		$str .= sprintf(", Column::ORIGIN_TYPE => %s", $column->originType);
+		$str .= sprintf(", Column::ORIGIN_TYPE => \"%s\"", $column->originType);
 
 	$str .= "]";
 

@@ -3,11 +3,13 @@
 namespace Tests\Entities;
 
 use Falseclock\DBD\Entity\Column;
+use Falseclock\DBD\Entity\Constraint;
 use Falseclock\DBD\Entity\Entity;
+use Falseclock\DBD\Entity\Join;
 use Falseclock\DBD\Entity\Mapper;
 use Falseclock\DBD\Entity\Primitive;
 
-class TenderLots extends Entity
+class TenderLot extends Entity
 {
 	const SCHEME = "tender";
 	const TABLE  = "tender_lots";
@@ -15,211 +17,274 @@ class TenderLots extends Entity
 	 * Номер тендерного лота, уникальный, серийный
 	 *
 	 * @var int
-	 * @see TenderLotsMap::$id
+	 * @see TenderLotMap::id
 	 */
 	public $id;
 	/**
 	 * Наименовение лота
 	 *
 	 * @var string
-	 * @see TenderLotsMap::$name
+	 * @see TenderLotMap::name
 	 */
 	public $name;
 	/**
 	 * Более расширенное описание лота
 	 *
 	 * @var string
-	 * @see TenderLotsMap::$description
+	 * @see TenderLotMap::description
 	 */
 	public $description;
 	/**
 	 * Бюджет лота за единицу товара или услуги
 	 *
 	 * @var string
-	 * @see TenderLotsMap::$budget
+	 * @see TenderLotMap::budget
 	 */
 	public $budget;
 	/**
 	 * Количество поставляемых товаров или услуг
 	 *
 	 * @var string
-	 * @see TenderLotsMap::$quantity
+	 * @see TenderLotMap::quantity
 	 */
 	public $quantity;
 	/**
 	 * Дата начала приема заявок по лоту
 	 *
 	 * @var string
-	 * @see TenderLotsMap::$dateStart
+	 * @see TenderLotMap::dateStart
 	 */
 	public $dateStart;
 	/**
 	 * Дата окончания приема заявок. Лот может автоматически продлятся и эта дата ответственна за это
 	 *
 	 * @var string
-	 * @see TenderLotsMap::$dateStop
+	 * @see TenderLotMap::dateStop
 	 */
 	public $dateStop;
 	/**
 	 * Полнотекстовый поиск по лоту; FIXME: изменить на not null после ввода новой страницы создания лота
 	 *
 	 * @var string
-	 * @see TenderLotsMap::$fts
+	 * @see TenderLotMap::fts
 	 */
 	public $fts;
 	/**
 	 * Статус достуности лота к публичному показу. По сути это статус удаления
 	 *
 	 * @var boolean
-	 * @see TenderLotsMap::$isActive
+	 * @see TenderLotMap::isActive
 	 */
 	public $isActive;
 	/**
 	 * Комментарий к статусу лота. Обычно устанавливается, когда статус изменяется на невозможный к дальнейшему участию в лоте
 	 *
 	 * @var string
-	 * @see TenderLotsMap::$stateExplanation
+	 * @see TenderLotMap::stateExplanation
 	 */
 	public $stateExplanation;
 	/**
 	 * Ссылка на тип лота
 	 *
 	 * @var int
-	 * @see TenderLotsMap::$typeId
+	 * @see TenderLotMap::typeId
 	 */
 	public $typeId;
 	/**
 	 * Ссылка на статус лота в тендерах
 	 *
 	 * @var int
-	 * @see TenderLotsMap::$stateId
+	 * @see TenderLotMap::stateId
 	 */
 	public $stateId;
 	/**
 	 * Доступ к лоту
 	 *
 	 * @var boolean
-	 * @see TenderLotsMap::$isPublic
+	 * @see TenderLotMap::isPublic
 	 */
 	public $isPublic;
 	/**
 	 *
 	 *
 	 * @var string
-	 * @see TenderLotsMap::$dateCommit
+	 * @see TenderLotMap::dateCommit
 	 */
 	public $dateCommit;
-	/** @var TenderLotStates $TenderLotStates Таблица видов состояний каждого лота тендера */
+	/**
+	 * Таблица видов состояний каждого лота тендера
+	 *
+	 * @var TenderLotStates
+	 * @see TenderLotMap::TenderLotStates
+	 */
 	public $TenderLotStates;
-	/** @var TenderLotTypes $TenderLotTypes Типы закупа в тендерных лотах */
+	/**
+	 * Типы закупа в тендерных лотах
+	 *
+	 * @var TenderLotTypes
+	 * @see TenderLotMap::TenderLotTypes
+	 */
 	public $TenderLotTypes;
-	/** @var TendersNew $TendersNew Таблица тендеров, которая аккумулирует в себя лоты */
+	/**
+	 * Таблица тендеров, которая аккумулирует в себя лоты
+	 *
+	 * @var TendersNew
+	 * @see TenderLotMap::TendersNew
+	 */
 	public $TendersNew;
 }
 
-class TenderLotsMap extends Mapper
+class TenderLotMap extends Mapper
 {
 	const ANNOTATION = "Таблица лотов, которые принадлежат определенному тендеру.; Вниание на опции тендера. Через coalesce проверяется есть ли кастомная опция для лота, затем проверяется настройка для компании и потом только берется стандартная настройка";
-	/** @see TenderLots::id */
+	/** @see TenderLot::id */
 	public $id = [
-		Column::NAME       => "tender_lot_id",
-		Column::TYPE       => Primitive::Int32,
-		Column::DEFAULT    => "nextval('auctions_auctionid_seq'::regclass)",
-		Column::NULLABLE   => false,
-		Column::ANNOTATION => "Номер тендерного лота, уникальный, серийный",
-		Column::KEY        => true
+		Column::NAME        => "tender_lot_id",
+		Column::TYPE        => Primitive::Int32,
+		Column::DEFAULT     => "nextval('auctions_auctionid_seq'::regclass)",
+		Column::NULLABLE    => false,
+		Column::ANNOTATION  => "Номер тендерного лота, уникальный, серийный",
+		Column::KEY         => true,
+		Column::ORIGIN_TYPE => "int4"
 	];
-	/** @see TenderLots::name */
+	/** @see TenderLot::name */
 	public $name = [
-		Column::NAME       => "tender_lot_name",
-		Column::TYPE       => Primitive::String,
-		Column::NULLABLE   => false,
-		Column::MAXLENGTH  => 512,
-		Column::ANNOTATION => "Наименовение лота"
+		Column::NAME        => "tender_lot_name",
+		Column::TYPE        => Primitive::String,
+		Column::NULLABLE    => false,
+		Column::MAXLENGTH   => 512,
+		Column::ANNOTATION  => "Наименовение лота",
+		Column::ORIGIN_TYPE => "varchar"
 	];
-	/** @see TenderLots::description */
+	/** @see TenderLot::description */
 	public $description = [
-		Column::NAME       => "tender_lot_description",
-		Column::TYPE       => Primitive::String,
-		Column::NULLABLE   => false,
-		Column::ANNOTATION => "Более расширенное описание лота"
+		Column::NAME        => "tender_lot_description",
+		Column::TYPE        => Primitive::String,
+		Column::NULLABLE    => false,
+		Column::ANNOTATION  => "Более расширенное описание лота",
+		Column::ORIGIN_TYPE => "text"
 	];
-	/** @see TenderLots::budget */
+	/** @see TenderLot::budget */
 	public $budget = [
-		Column::NAME       => "tender_lot_budget",
-		Column::TYPE       => Primitive::Decimal,
-		Column::DEFAULT    => "0",
-		Column::NULLABLE   => false,
-		Column::SCALE      => 5,
-		Column::PRECISION  => 30,
-		Column::ANNOTATION => "Бюджет лота за единицу товара или услуги"
+		Column::NAME        => "tender_lot_budget",
+		Column::TYPE        => Primitive::Decimal,
+		Column::DEFAULT     => "0",
+		Column::NULLABLE    => false,
+		Column::SCALE       => 5,
+		Column::PRECISION   => 30,
+		Column::ANNOTATION  => "Бюджет лота за единицу товара или услуги",
+		Column::ORIGIN_TYPE => "numeric"
 	];
-	/** @see TenderLots::quantity */
+	/** @see TenderLot::quantity */
 	public $quantity = [
-		Column::NAME       => "tender_lot_quantity",
-		Column::TYPE       => Primitive::Decimal,
-		Column::DEFAULT    => "0",
-		Column::NULLABLE   => false,
-		Column::SCALE      => 5,
-		Column::PRECISION  => 22,
-		Column::ANNOTATION => "Количество поставляемых товаров или услуг"
+		Column::NAME        => "tender_lot_quantity",
+		Column::TYPE        => Primitive::Decimal,
+		Column::DEFAULT     => "0",
+		Column::NULLABLE    => false,
+		Column::SCALE       => 5,
+		Column::PRECISION   => 22,
+		Column::ANNOTATION  => "Количество поставляемых товаров или услуг",
+		Column::ORIGIN_TYPE => "numeric"
 	];
-	/** @see TenderLots::dateStart */
+	/** @see TenderLot::dateStart */
 	public $dateStart = [
-		Column::NAME       => "tender_lot_date_start",
-		Column::TYPE       => Primitive::DateTimeOffset,
-		Column::DEFAULT    => "now()",
-		Column::NULLABLE   => false,
-		Column::PRECISION  => 6,
-		Column::ANNOTATION => "Дата начала приема заявок по лоту"
+		Column::NAME        => "tender_lot_date_start",
+		Column::TYPE        => Primitive::DateTimeOffset,
+		Column::DEFAULT     => "now()",
+		Column::NULLABLE    => false,
+		Column::PRECISION   => 6,
+		Column::ANNOTATION  => "Дата начала приема заявок по лоту",
+		Column::ORIGIN_TYPE => "timestamptz"
 	];
-	/** @see TenderLots::dateStop */
+	/** @see TenderLot::dateStop */
 	public $dateStop = [
-		Column::NAME       => "tender_lot_date_stop",
-		Column::TYPE       => Primitive::DateTimeOffset,
-		Column::NULLABLE   => false,
-		Column::PRECISION  => 6,
-		Column::ANNOTATION => "Дата окончания приема заявок. Лот может автоматически продлятся и эта дата ответственна за это"
+		Column::NAME        => "tender_lot_date_stop",
+		Column::TYPE        => Primitive::DateTimeOffset,
+		Column::NULLABLE    => false,
+		Column::PRECISION   => 6,
+		Column::ANNOTATION  => "Дата окончания приема заявок. Лот может автоматически продлятся и эта дата ответственна за это",
+		Column::ORIGIN_TYPE => "timestamptz"
 	];
-	/** @see TenderLots::fts */
+	/** @see TenderLot::fts */
 	public $fts = [
-		Column::NAME       => "tender_lot_fts",
-		Column::TYPE       => Primitive::String,
-		Column::NULLABLE   => false,
-		Column::ANNOTATION => "Полнотекстовый поиск по лоту; FIXME: изменить на not null после ввода новой страницы создания лота"
+		Column::NAME        => "tender_lot_fts",
+		Column::TYPE        => Primitive::String,
+		Column::NULLABLE    => false,
+		Column::ANNOTATION  => "Полнотекстовый поиск по лоту; FIXME: изменить на not null после ввода новой страницы создания лота",
+		Column::ORIGIN_TYPE => "tsvector"
 	];
-	/** @see TenderLots::isActive */
+	/** @see TenderLot::isActive */
 	public $isActive = [
-		Column::NAME       => "tender_lot_is_active",
-		Column::TYPE       => Primitive::Boolean,
-		Column::DEFAULT    => "true",
-		Column::NULLABLE   => false,
-		Column::ANNOTATION => "Статус достуности лота к публичному показу. По сути это статус удаления"
+		Column::NAME        => "tender_lot_is_active",
+		Column::TYPE        => Primitive::Boolean,
+		Column::DEFAULT     => "true",
+		Column::NULLABLE    => false,
+		Column::ANNOTATION  => "Статус достуности лота к публичному показу. По сути это статус удаления",
+		Column::ORIGIN_TYPE => "bool"
 	];
-	/** @see TenderLots::stateExplanation */
+	/** @see TenderLot::stateExplanation */
 	public $stateExplanation = [
-		Column::NAME       => "tender_lot_state_explanation",
-		Column::TYPE       => Primitive::String,
-		Column::NULLABLE   => false,
-		Column::ANNOTATION => "Комментарий к статусу лота. Обычно устанавливается, когда статус изменяется на невозможный к дальнейшему участию в лоте"
+		Column::NAME        => "tender_lot_state_explanation",
+		Column::TYPE        => Primitive::String,
+		Column::NULLABLE    => false,
+		Column::ANNOTATION  => "Комментарий к статусу лота. Обычно устанавливается, когда статус изменяется на невозможный к дальнейшему участию в лоте",
+		Column::ORIGIN_TYPE => "text"
 	];
-	/** @see TenderLots::typeId */
-	public $typeId = [ Column::NAME => "tender_lot_type_id", Column::TYPE => Primitive::Int32, Column::NULLABLE => false, Column::ANNOTATION => "Ссылка на тип лота" ];
-	/** @see TenderLots::stateId */
+	/** @see TenderLot::typeId */
+	public $typeId = [
+		Column::NAME        => "tender_lot_type_id",
+		Column::TYPE        => Primitive::Int32,
+		Column::NULLABLE    => false,
+		Column::ANNOTATION  => "Ссылка на тип лота",
+		Column::ORIGIN_TYPE => "int4"
+	];
+	/** @see TenderLot::stateId */
 	public $stateId = [
-		Column::NAME       => "tender_lot_state_id",
-		Column::TYPE       => Primitive::Int32,
-		Column::NULLABLE   => false,
-		Column::ANNOTATION => "Ссылка на статус лота в тендерах"
+		Column::NAME        => "tender_lot_state_id",
+		Column::TYPE        => Primitive::Int32,
+		Column::NULLABLE    => false,
+		Column::ANNOTATION  => "Ссылка на статус лота в тендерах",
+		Column::ORIGIN_TYPE => "int4"
 	];
-	/** @see TenderLots::isPublic */
+	/** @see TenderLot::isPublic */
 	public $isPublic = [
-		Column::NAME       => "tender_lot_is_public",
-		Column::TYPE       => Primitive::Boolean,
-		Column::DEFAULT    => "true",
-		Column::NULLABLE   => false,
-		Column::ANNOTATION => "Доступ к лоту"
+		Column::NAME        => "tender_lot_is_public",
+		Column::TYPE        => Primitive::Boolean,
+		Column::DEFAULT     => "true",
+		Column::NULLABLE    => false,
+		Column::ANNOTATION  => "Доступ к лоту",
+		Column::ORIGIN_TYPE => "bool"
 	];
-	/** @see TenderLots::dateCommit */
-	public $dateCommit = [ Column::NAME => "tender_lot_date_commit", Column::TYPE => Primitive::DateTimeOffset, Column::NULLABLE => false, Column::PRECISION => 6 ];
+	/** @see TenderLot::dateCommit */
+	public $dateCommit = [
+		Column::NAME        => "tender_lot_date_commit",
+		Column::TYPE        => Primitive::DateTimeOffset,
+		Column::NULLABLE    => false,
+		Column::PRECISION   => 6,
+		Column::ORIGIN_TYPE => "timestamptz"
+	];
+	/** @see TenderLot::TenderLotStates */
+	protected $TenderLotStates = [
+		Constraint::COLUMN         => "tender_lot_state_id",
+		Constraint::FOREIGN_SCHEME => "tender",
+		Constraint::FOREIGN_TABLE  => "tender_lot_states",
+		Constraint::FOREIGN_COLUMN => "tender_lot_state_id",
+		Constraint::JOIN_TYPE      => Join::MANY_TO_ONE
+	];
+	/** @see TenderLot::TenderLotTypes */
+	protected $TenderLotTypes = [
+		Constraint::COLUMN         => "tender_lot_type_id",
+		Constraint::FOREIGN_SCHEME => "tender",
+		Constraint::FOREIGN_TABLE  => "tender_lot_types",
+		Constraint::FOREIGN_COLUMN => "tender_lot_type_id",
+		Constraint::JOIN_TYPE      => Join::MANY_TO_ONE
+	];
+	/** @see TenderLot::TendersNew */
+	protected $TendersNew = [
+		Constraint::COLUMN         => "tender_id",
+		Constraint::FOREIGN_SCHEME => "tender",
+		Constraint::FOREIGN_TABLE  => "tenders_new",
+		Constraint::FOREIGN_COLUMN => "tender_id",
+		Constraint::JOIN_TYPE      => Join::ONE_TO_MANY
+	];
 }
