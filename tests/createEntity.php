@@ -10,9 +10,9 @@ use Falseclock\DBD\Entity\Join;
 
 require_once('./dbConnection.php');
 
-$TABLE_NAME = "tender_lots";
+$TABLE_NAME = "tender_lot_types";
 $SCHEME_NAME = "tender";
-$COLUMN_PREFIX = "tender_lot_";
+$COLUMN_PREFIX = "tender_lot_type_";
 $NAME_SPACE = "Tests\Entities";
 
 /** @noinspection PhpUnhandledExceptionInspection */
@@ -89,10 +89,10 @@ foreach($table->constraints as $constraint) {
 	$foreignTableName = Utils::dashesToCamelCase($constraint->foreignTable->name, true);
 	switch(true) {
 		case $constraint->join instanceof Join\ManyToMany:
+		case $constraint->join instanceof Join\OneToMany:
 			echo sprintf("/** @var %s[] \$%s %s*/\npublic \$%s = [];\n", $foreignTableName, $foreignTableName, $constraint->foreignTable->annotation, $foreignTableName);
 			break;
 		case $constraint->join instanceof Join\ManyToOne:
-		case $constraint->join instanceof Join\OneToMany:
 		case $constraint->join instanceof Join\OneToOne:
 
 			echo sprintf("/**\n* %s \n*\n* @var %s\n* @see %sMap::%s */\npublic $%s;\n",

@@ -9,21 +9,19 @@ use Falseclock\OData\Server\Configuration;
 
 abstract class BaseWriter implements Writer
 {
-    /**
-     * @return string
-     * @throws Exception
-     */
-    protected function getBaseUrl(): string
-    {
-        return "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}" . Configuration::me()->getContextPath();
-    }
+	/**
+	 * @return string
+	 * @throws Exception
+	 */
+	protected function getBaseUrl(): string {
+		return "{$_SERVER['REQUEST_SCHEME']}://{$_SERVER['HTTP_HOST']}" . Configuration::me()->getContextPath();
+	}
 
-    /**
+	/**
 	 * @return EdmEntity[]
-     * @throws Exception
-     */
-    protected function getEntities(): iterable
-    {
+	 * @throws Exception
+	 */
+	protected function getEntities(): iterable {
 		return (new EdmEntitiesProvider())->getEntities();
-    }
+	}
 }

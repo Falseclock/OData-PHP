@@ -132,6 +132,10 @@ class AtomWriter extends BaseWriter
 				$this->xmlWriter->endElement();
 			}
 
+			foreach($entity->getConstraints() as $constraint) {
+				$foo = 1;
+			}
+
 			$annotation = $entity->getAnnotation();
 			if (!empty($annotation)) {
 				$this->xmlWriter->startElement(Constants::ANNOTATION);
@@ -144,7 +148,8 @@ class AtomWriter extends BaseWriter
 				$this->xmlWriter->endElement();
 			}
 
-				/** </EntityType> */
+
+			/** </EntityType> */
 			$this->xmlWriter->endElement();
 		}
 

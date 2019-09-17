@@ -4,8 +4,10 @@ namespace Falseclock\OData\Edm;
 
 use Exception;
 use Falseclock\DBD\Entity\Column;
+use Falseclock\DBD\Entity\Constraint;
 use Falseclock\DBD\Entity\Entity;
 use Falseclock\DBD\Entity\Mapper;
+use ReflectionException;
 
 class EdmEntity
 {
@@ -26,8 +28,11 @@ class EdmEntity
 		$this->mapping = $className::mappingClass();
 	}
 
-	public function getName(): string {
-		return (substr($this->className, strrpos($this->className, '\\') + 1));
+	/**
+	 * @return string
+	 */
+	public function getAnnotation() {
+		return $this->mapping->annotation();
 	}
 
 	/**
@@ -40,9 +45,13 @@ class EdmEntity
 	}
 
 	/**
-	 * @return string
+	 * @return Constraint[]
 	 */
-	public function getAnnotation() {
-		return $this->mapping->annotation();
+	public function getConstraints(): iterable {
+		return $this->mapping->getConstraints();
+	}
+
+	public function getName(): string {
+		return (substr($this->className, strrpos($this->className, '\\') + 1));
 	}
 }

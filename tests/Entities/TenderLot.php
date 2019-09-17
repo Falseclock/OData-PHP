@@ -114,24 +114,24 @@ class TenderLot extends Entity
 	/**
 	 * Таблица видов состояний каждого лота тендера
 	 *
-	 * @var TenderLotStates
-	 * @see TenderLotMap::TenderLotStates
+	 * @var TenderLotState
+	 * @see TenderLotMap::TenderLotState
 	 */
-	public $TenderLotStates;
+	public $TenderLotState;
 	/**
 	 * Типы закупа в тендерных лотах
 	 *
-	 * @var TenderLotTypes
-	 * @see TenderLotMap::TenderLotTypes
+	 * @var TenderLotType[]
+	 * @see TenderLotMap::TenderLotType
 	 */
-	public $TenderLotTypes;
+	public $TenderLotType;
 	/**
 	 * Таблица тендеров, которая аккумулирует в себя лоты
 	 *
-	 * @var TendersNew
-	 * @see TenderLotMap::TendersNew
+	 * @var Tender
+	 * @see TenderLotMap::Tender
 	 */
-	public $TendersNew;
+	public $Tender;
 }
 
 class TenderLotMap extends Mapper
@@ -263,28 +263,28 @@ class TenderLotMap extends Mapper
 		Column::PRECISION   => 6,
 		Column::ORIGIN_TYPE => "timestamptz"
 	];
-	/** @see TenderLot::TenderLotStates */
-	protected $TenderLotStates = [
+	/** @see TenderLot::TenderLotState */
+	protected $TenderLotState = [
 		Constraint::COLUMN         => "tender_lot_state_id",
 		Constraint::FOREIGN_SCHEME => "tender",
 		Constraint::FOREIGN_TABLE  => "tender_lot_states",
 		Constraint::FOREIGN_COLUMN => "tender_lot_state_id",
 		Constraint::JOIN_TYPE      => Join::MANY_TO_ONE
 	];
-	/** @see TenderLot::TenderLotTypes */
-	protected $TenderLotTypes = [
+	/** @see TenderLot::TenderLotType */
+	protected $TenderLotType = [
 		Constraint::COLUMN         => "tender_lot_type_id",
 		Constraint::FOREIGN_SCHEME => "tender",
 		Constraint::FOREIGN_TABLE  => "tender_lot_types",
 		Constraint::FOREIGN_COLUMN => "tender_lot_type_id",
 		Constraint::JOIN_TYPE      => Join::MANY_TO_ONE
 	];
-	/** @see TenderLot::TendersNew */
-	protected $TendersNew = [
+	/** @see TenderLot::Tender */
+	protected $Tender = [
 		Constraint::COLUMN         => "tender_id",
 		Constraint::FOREIGN_SCHEME => "tender",
 		Constraint::FOREIGN_TABLE  => "tenders_new",
 		Constraint::FOREIGN_COLUMN => "tender_id",
-		Constraint::JOIN_TYPE      => Join::ONE_TO_MANY
+		Constraint::JOIN_TYPE      => Join::MANY_TO_ONE
 	];
 }
