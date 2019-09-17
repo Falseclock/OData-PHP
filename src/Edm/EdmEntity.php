@@ -7,7 +7,6 @@ use Falseclock\DBD\Entity\Column;
 use Falseclock\DBD\Entity\Constraint;
 use Falseclock\DBD\Entity\Entity;
 use Falseclock\DBD\Entity\Mapper;
-use ReflectionException;
 
 class EdmEntity
 {

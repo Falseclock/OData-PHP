@@ -269,7 +269,8 @@ class TenderLotMap extends Mapper
 		Constraint::FOREIGN_SCHEME => "tender",
 		Constraint::FOREIGN_TABLE  => "tender_lot_states",
 		Constraint::FOREIGN_COLUMN => "tender_lot_state_id",
-		Constraint::JOIN_TYPE      => Join::MANY_TO_ONE
+		Constraint::JOIN_TYPE      => Join::MANY_TO_ONE,
+		Constraint::BASE_CLASS     => TenderLotState::class
 	];
 	/** @see TenderLot::TenderLotType */
 	protected $TenderLotType = [
@@ -277,7 +278,8 @@ class TenderLotMap extends Mapper
 		Constraint::FOREIGN_SCHEME => "tender",
 		Constraint::FOREIGN_TABLE  => "tender_lot_types",
 		Constraint::FOREIGN_COLUMN => "tender_lot_type_id",
-		Constraint::JOIN_TYPE      => Join::MANY_TO_ONE
+		Constraint::JOIN_TYPE      => Join::MANY_TO_ONE,
+		Constraint::BASE_CLASS     => TenderLotType::class
 	];
 	/** @see TenderLot::Tender */
 	protected $Tender = [
@@ -285,6 +287,7 @@ class TenderLotMap extends Mapper
 		Constraint::FOREIGN_SCHEME => "tender",
 		Constraint::FOREIGN_TABLE  => "tenders_new",
 		Constraint::FOREIGN_COLUMN => "tender_id",
-		Constraint::JOIN_TYPE      => Join::MANY_TO_ONE
+		Constraint::JOIN_TYPE      => Join::MANY_TO_ONE,
+		Constraint::BASE_CLASS     => Tender::class
 	];
 }

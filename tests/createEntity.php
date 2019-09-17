@@ -10,9 +10,9 @@ use Falseclock\DBD\Entity\Join;
 
 require_once('./dbConnection.php');
 
-$TABLE_NAME = "tender_lot_types";
+$TABLE_NAME = "tenders_new";
 $SCHEME_NAME = "tender";
-$COLUMN_PREFIX = "tender_lot_type_";
+$COLUMN_PREFIX = "tender_";
 $NAME_SPACE = "Tests\Entities";
 
 /** @noinspection PhpUnhandledExceptionInspection */
