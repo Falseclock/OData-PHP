@@ -3,6 +3,7 @@
 namespace Falseclock\OData\Writers;
 
 use Exception;
+use Falseclock\DBD\Entity\Join;
 use Falseclock\OData\Server\Configuration;
 use Falseclock\OData\Server\Context\Request;
 use Falseclock\OData\Server\Context\Response;
@@ -132,14 +133,46 @@ class AtomWriter extends BaseWriter
 				$this->xmlWriter->endElement();
 			}
 
-			foreach($entity->getConstraints() as $constraint) {
-				$foo = 1;
-				/*				dump($entity);
-								exit;*/
+			foreach($entity->getConstraints() as $constraintName => $constraintValue) {
+
+				/** NavigationProperty  */
+				$this->xmlWriter->startElement(Constants::NAVIGATION_PROPERTY);
+				$this->xmlWriter->writeAttribute(Constants::PROPERTY_NAME, $constraintName);
+
+				switch($constraintValue->join) {
+					case Join::MANY_TO_MANY:
+					case Join::ONE_TO_MANY:
+						$partner = $entity->getName();
+						$type = sprintf("Collection(%s.%s)", Configuration::me()->getNameSpace(), $constraintName);
+						break;
+					default:
+						$partner = null;
+						$type = sprintf("%s.%s", Configuration::me()->getNameSpace(), $constraintName);
+				}
+				$this->xmlWriter->writeAttribute(Constants::PROPERTY_TYPE, $type);
+
+				if(isset($partner)) {
+					$this->xmlWriter->writeAttribute(Constants::PROPERTY_PARTNER, $partner);
+				}
+
+				/** ReferentialConstraint */
+				$this->xmlWriter->startElement(Constants::REFERENTIAL_CONSTRAINT);
+
+				$localColumn = $entity->getColumnByOriginName($constraintValue->localTable, $constraintValue->localColumn->name);
+				$this->xmlWriter->writeAttribute(Constants::PROPERTY, $localColumn); // Local table column name
+
+				$foreignColumn = $entity->getColumnByOriginName($constraintValue->foreignTable, $constraintValue->foreignColumn->name);
+				$this->xmlWriter->writeAttribute(Constants::REFERENCED_PROPERTY, $foreignColumn); // Foreign table column name
+
+				/** ReferentialConstraint */
+				$this->xmlWriter->endElement();
+
+				/** NavigationProperty  */
+				$this->xmlWriter->endElement();
 			}
 
 			$annotation = $entity->getAnnotation();
-			if (!empty($annotation)) {
+			if(!empty($annotation)) {
 				$this->xmlWriter->startElement(Constants::ANNOTATION);
 				$this->xmlWriter->writeAttribute(Constants::TERM, Constants::CORE_ANNOTATION_TERM);
 
@@ -149,7 +182,6 @@ class AtomWriter extends BaseWriter
 
 				$this->xmlWriter->endElement();
 			}
-
 
 			/** </EntityType> */
 			$this->xmlWriter->endElement();

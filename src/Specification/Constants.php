@@ -89,4 +89,8 @@ class Constants
 	const KEY = 'Key';
 	// PropetyRef Element Name in csdl.
 	const PROPERTY_REF = 'PropertyRef';
+	const NAVIGATION_PROPERTY = "NavigationProperty";
+	const PROPERTY_PARTNER = "Partner";
+	const REFERENTIAL_CONSTRAINT = "ReferentialConstraint";
+	const REFERENCED_PROPERTY = "ReferencedProperty";
 }

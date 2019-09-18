@@ -4,9 +4,11 @@ namespace Falseclock\OData\Edm;
 
 use Exception;
 use Falseclock\DBD\Entity\Column;
+use Falseclock\DBD\Entity\Common\EntityException;
 use Falseclock\DBD\Entity\Constraint;
 use Falseclock\DBD\Entity\Entity;
 use Falseclock\DBD\Entity\Mapper;
+use Falseclock\DBD\Entity\Table;
 
 class EdmEntity
 {
@@ -55,5 +57,14 @@ class EdmEntity
 	 */
 	public function getName(): string {
 		return (substr($this->className, strrpos($this->className, '\\') + 1));
+	}
+
+	public function getColumnByOriginName(Table $table, $columnOriginName) {
+		foreach(array_merge($table->columns, $table->otherColumns) as $columnName => $columnValue) {
+			if($columnValue->name == $columnOriginName) {
+				return $columnName;
+			}
+		}
+		throw new EntityException("Can't find column {$columnOriginName}");
 	}
 }
