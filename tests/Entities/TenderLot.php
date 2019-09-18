@@ -121,7 +121,7 @@ class TenderLot extends Entity
 	/**
 	 * Типы закупа в тендерных лотах
 	 *
-	 * @var TenderLotType[]
+	 * @var TenderLotType
 	 * @see TenderLotMap::TenderLotType
 	 */
 	public $TenderLotType;
@@ -265,7 +265,7 @@ class TenderLotMap extends Mapper
 	];
 	/** @see TenderLot::TenderLotState */
 	protected $TenderLotState = [
-		Constraint::COLUMN         => "tender_lot_state_id",
+		Constraint::LOCAL_COLUMN   => "tender_lot_state_id",
 		Constraint::FOREIGN_SCHEME => "tender",
 		Constraint::FOREIGN_TABLE  => "tender_lot_states",
 		Constraint::FOREIGN_COLUMN => "tender_lot_state_id",
@@ -274,7 +274,7 @@ class TenderLotMap extends Mapper
 	];
 	/** @see TenderLot::TenderLotType */
 	protected $TenderLotType = [
-		Constraint::COLUMN         => "tender_lot_type_id",
+		Constraint::LOCAL_COLUMN   => "tender_lot_type_id",
 		Constraint::FOREIGN_SCHEME => "tender",
 		Constraint::FOREIGN_TABLE  => "tender_lot_types",
 		Constraint::FOREIGN_COLUMN => "tender_lot_type_id",
@@ -282,12 +282,47 @@ class TenderLotMap extends Mapper
 		Constraint::BASE_CLASS     => TenderLotType::class
 	];
 	/** @see TenderLot::Tender */
-	protected $Tender = [
-		Constraint::COLUMN         => "tender_id",
+	protected $Tender           = [
+		Constraint::LOCAL_COLUMN   => "tender_id",
 		Constraint::FOREIGN_SCHEME => "tender",
 		Constraint::FOREIGN_TABLE  => "tenders_new",
 		Constraint::FOREIGN_COLUMN => "tender_id",
 		Constraint::JOIN_TYPE      => Join::MANY_TO_ONE,
 		Constraint::BASE_CLASS     => Tender::class
+	];
+	private   $tenderId         = [
+		Column::NAME        => "tender_id",
+		Column::TYPE        => Primitive::Int32,
+		Column::NULLABLE    => false,
+		Column::ANNOTATION  => "Ссылка на тендер, под которым открывали лот",
+		Column::ORIGIN_TYPE => "int4"
+	];
+	private   $deliveryEntityId = [
+		Column::NAME        => "delivery_entity_id",
+		Column::TYPE        => Primitive::Int32,
+		Column::NULLABLE    => false,
+		Column::ANNOTATION  => "Ссылка на регион поставки конкретного лота",
+		Column::ORIGIN_TYPE => "int4"
+	];
+	private   $categoryId       = [
+		Column::NAME        => "category_id",
+		Column::TYPE        => Primitive::Int32,
+		Column::NULLABLE    => false,
+		Column::ANNOTATION  => "Ссылка на категорию в которой открыт лот.",
+		Column::ORIGIN_TYPE => "int4"
+	];
+	private   $currencyId       = [
+		Column::NAME        => "currency_id",
+		Column::TYPE        => Primitive::Int32,
+		Column::NULLABLE    => false,
+		Column::ANNOTATION  => "Ссылка на валюту",
+		Column::ORIGIN_TYPE => "int4"
+	];
+	private   $measureUnitId    = [
+		Column::NAME        => "measure_unit_id",
+		Column::TYPE        => Primitive::Int32,
+		Column::NULLABLE    => false,
+		Column::ANNOTATION  => "Ссылка на единицу измерения",
+		Column::ORIGIN_TYPE => "int4"
 	];
 }

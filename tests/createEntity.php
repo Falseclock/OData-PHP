@@ -10,10 +10,23 @@ use Falseclock\DBD\Entity\Join;
 
 require_once('./dbConnection.php');
 
-$TABLE_NAME = "tenders_new";
+$TABLE_NAME = "tender_lots";
 $SCHEME_NAME = "tender";
-$COLUMN_PREFIX = "tender_";
+$COLUMN_PREFIX = "tender_lot_";
 $NAME_SPACE = "Tests\Entities";
+
+$OVERRIDES = [
+	'table' => [
+		'tender_lots'       => 'TenderLot',
+		'tenders_new'       => 'Tender',
+		'categories'        => 'Category',
+		'currencies'        => 'Currency',
+		'delivery_entities' => 'DeliveryEntity',
+		'measure_units'     => 'MeasureUnit',
+		'tender_lot_states' => 'TenderLotState',
+		'tender_lot_types'  => 'TenderLotType',
+	],
+];
 
 /** @noinspection PhpUnhandledExceptionInspection */
 $table = DBDUtils::tableStructure($db, $TABLE_NAME, $SCHEME_NAME);
@@ -31,7 +44,7 @@ foreach($table->constraints as $constraint) {
 			$choices[] = $value;
 		}
 
-		$choice = readStdin("Set how {$constraint->foreignTable->name}({$constraint->foreignColumn->name}) refers {$table->name}({$constraint->column->name})",
+		$choice = readStdin("Set how {$constraint->foreignTable->name}({$constraint->foreignColumn->name}) refers {$table->name}({$constraint->localColumn->name})",
 							$choices
 		);
 
@@ -65,15 +78,18 @@ echo "use Falseclock\DBD\Entity\Entity;\n";
 echo "use Falseclock\DBD\Entity\Join;\n";
 echo "use Falseclock\DBD\Entity\Mapper;\n";
 echo "use Falseclock\DBD\Entity\Primitive;\n";
-$entityName = Utils::dashesToCamelCase($TABLE_NAME, true);
+
+$entityName = getEntityName($TABLE_NAME,
+							$OVERRIDES
+); //isset($OVERRIDES['table'][$TABLE_NAME]) ? isset($OVERRIDES['table'][$TABLE_NAME]) : Utils::dashesToCamelCase($TABLE_NAME, true);
 
 echo sprintf("\nclass %s extends Entity {\n", $entityName);
 echo sprintf("const TABLE = \"%s\";\n", $TABLE_NAME);
 echo sprintf("const SCHEME = \"%s\";\n", $SCHEME_NAME);
 foreach($table->columns as $column) {
 	$prefixLength = strlen($COLUMN_PREFIX);
+	$columnName = Utils::dashesToCamelCase(substr($column->name, $prefixLength));
 	if(strpos($column->name, $COLUMN_PREFIX) === 0) {
-		$columnName = Utils::dashesToCamelCase(substr($column->name, $prefixLength));
 
 		echo sprintf("/**\n* %s \n*\n* @var %s\n* @see %sMap::%s */\n",
 					 preg_replace('/\s\s+/', "; ", $column->annotation),
@@ -85,8 +101,10 @@ foreach($table->columns as $column) {
 		echo sprintf("public \$%s;\n", $columnName);
 	}
 }
+
 foreach($table->constraints as $constraint) {
-	$foreignTableName = Utils::dashesToCamelCase($constraint->foreignTable->name, true);
+	$foreignTableName = getEntityName($constraint->foreignTable->name, $OVERRIDES);
+
 	switch(true) {
 		case $constraint->join instanceof Join\ManyToMany:
 		case $constraint->join instanceof Join\OneToMany:
@@ -104,6 +122,7 @@ foreach($table->constraints as $constraint) {
 			);
 	}
 }
+
 echo "}\n\n";
 
 $table->annotation = htmlspecialchars($table->annotation, ENT_COMPAT);
@@ -111,7 +130,7 @@ $table->annotation = str_replace([ "\r", "\\r" ], "", $table->annotation);
 $table->annotation = str_replace("\\n", "\n", $table->annotation);
 $table->annotation = preg_replace('/\s\s+/', "; ", $table->annotation);
 
-echo sprintf("class %sMap extends Mapper {\n", Utils::dashesToCamelCase($TABLE_NAME, true));
+echo sprintf("class %sMap extends Mapper {\n", getEntityName($TABLE_NAME, $OVERRIDES)); //Utils::dashesToCamelCase(, true));
 echo sprintf("const ANNOTATION = \"%s\";\n", $table->annotation);
 
 foreach($table->columns as $column) {
@@ -123,19 +142,28 @@ foreach($table->columns as $column) {
 }
 
 foreach($table->constraints as $constraint) {
-	$varName = Utils::dashesToCamelCase($constraint->foreignTable->name, true);
-	echo sprintf("/** @see %s::%s */\n protected \$%s = %s;\n", $entityName, $varName, $varName, getReference($constraint));
+	$varName = getEntityName($constraint->foreignTable->name, $OVERRIDES); // Utils::dashesToCamelCase($constraint->foreignTable->name, true);
+	echo sprintf("/** @see %s::%s */\n protected \$%s = %s;\n", $entityName, $varName, $varName, getReference($constraint, $OVERRIDES));
+}
+
+foreach($table->columns as $column) {
+	$prefixLength = strlen($COLUMN_PREFIX);
+	if(strpos($column->name, $COLUMN_PREFIX) === false) {
+		$columnName = Utils::dashesToCamelCase($column->name);
+		echo sprintf("private \$%s = %s;\n", $columnName, getColumn($column));
+	}
 }
 
 echo "}\n";
 
-function getReference(Constraint $constraint) {
-	$str = sprintf("[ Constraint::COLUMN => \"%s\"", $constraint->column->name);
+function getReference(Constraint $constraint, $OVERRIDES) {
+	$str = sprintf("[ Constraint::COLUMN => \"%s\"", $constraint->localColumn->name);
 	$str .= sprintf(", Constraint::FOREIGN_SCHEME => \"%s\"", $constraint->foreignTable->scheme);
 	$str .= sprintf(", Constraint::FOREIGN_TABLE => \"%s\"", $constraint->foreignTable->name);
 	$str .= sprintf(", Constraint::FOREIGN_COLUMN => \"%s\"", $constraint->foreignColumn->name);
 	/** @noinspection PhpUnhandledExceptionInspection */
 	$str .= sprintf(", Constraint::JOIN_TYPE => Join::%s", $constraint->join->getConstantName());
+	$str .= sprintf(", Constraint::BASE_CLASS => %s::class", getEntityName($constraint->foreignTable->name, $OVERRIDES));
 
 	$str .= "]";
 
@@ -176,6 +204,9 @@ function getColumn(Column $column) {
 }
 
 function readStdin(string $prompt, iterable $inputs) {
+
+	return 1;
+
 	echo sprintf("%s\n", $prompt);
 	foreach($inputs as $number => $value) {
 		echo sprintf("  %d: %s\n", $number, $value);
@@ -194,4 +225,8 @@ function readStdin(string $prompt, iterable $inputs) {
 	}
 
 	return $line;
+}
+
+function getEntityName($name, $override) {
+	return isset($override['table'][$name]) ? $override['table'][$name] : Utils::dashesToCamelCase($name, true);
 }

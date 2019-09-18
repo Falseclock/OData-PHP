@@ -24,14 +24,14 @@ class EdmEntity
 	 */
 	public function __construct(string $className) {
 		$this->className = $className;
-		$this->mapping = $className::mappingClass();
+		$this->mapping = $className::mappingInstance();
 	}
 
 	/**
 	 * @return string
 	 */
 	public function getAnnotation() {
-		return $this->mapping->annotation();
+		return $this->mapping->getAnnotation();
 	}
 
 	/**
@@ -50,6 +50,9 @@ class EdmEntity
 		return $this->mapping->getConstraints();
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getName(): string {
 		return (substr($this->className, strrpos($this->className, '\\') + 1));
 	}

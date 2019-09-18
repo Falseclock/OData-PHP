@@ -133,8 +133,9 @@ class AtomWriter extends BaseWriter
 			}
 
 			foreach($entity->getConstraints() as $constraint) {
-				dump($entity);
-				exit;
+				$foo = 1;
+				/*				dump($entity);
+								exit;*/
 			}
 
 			$annotation = $entity->getAnnotation();
