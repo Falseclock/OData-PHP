@@ -93,4 +93,5 @@ class Constants
 	const PROPERTY_PARTNER = "Partner";
 	const REFERENTIAL_CONSTRAINT = "ReferentialConstraint";
 	const REFERENCED_PROPERTY = "ReferencedProperty";
+	const COLLECTION = "Collection";
 }

@@ -3,6 +3,7 @@
 namespace Falseclock\OData\Writers;
 
 use Exception;
+use Falseclock\DBD\Entity\Join;
 use Falseclock\OData\Server\Configuration;
 use Falseclock\OData\Server\Context\Request;
 use Falseclock\OData\Server\Context\Response;
@@ -84,11 +85,34 @@ class JsonWriter extends BaseWriter
 				$entities[$entity->getName()] = array_merge($entities[$entity->getName()], [ $columnName => $column ]);
 			}
 
-			// "@Core.Description#": "Таблица валют"
 			$annotation = $entity->getAnnotation();
 			if(!empty($annotation)) {
 				$entities[$entity->getName()] = array_merge($entities[$entity->getName()], [ '@' . Constants::CORE_ANNOTATION_TERM => $annotation ]);
 			}
+
+			foreach($entity->getConstraints() as $constraintName => $constraintValue) {
+				$reference = [];
+				$reference['$' . Constants::KIND] = Constants::NAVIGATION_PROPERTY;
+
+				switch($constraintValue->join) {
+					case Join::MANY_TO_MANY:
+					case Join::ONE_TO_MANY:
+						$reference['$' . Constants::PROPERTY_TYPE] = sprintf("Collection(%s.%s)", Configuration::me()->getNameSpace(), $constraintName);
+						$reference['$' . Constants::COLLECTION] = true;
+						$reference['$' . Constants::PROPERTY_PARTNER] = $entity->getName();
+						break;
+					default:
+						$reference['$' . Constants::PROPERTY_TYPE] = sprintf("%s.%s", Configuration::me()->getNameSpace(), $constraintName);
+				}
+
+				$localColumn = $entity->getColumnByOriginName($constraintValue->localTable, $constraintValue->localColumn->name);
+				$foreignColumn = $entity->getColumnByOriginName($constraintValue->foreignTable, $constraintValue->foreignColumn->name);
+
+				$reference['$' . Constants::REFERENTIAL_CONSTRAINT] = [ $localColumn => $foreignColumn];
+
+				$entities[$entity->getName()] = array_merge($entities[$entity->getName()], [ $constraintName => $reference ]);
+			}
+
 		}
 		$this->writer[Configuration::me()->getNameSpace()] = (object) $entities;
 
