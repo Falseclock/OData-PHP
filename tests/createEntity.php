@@ -25,6 +25,7 @@ $OVERRIDES = [
 		'measure_units'     => 'MeasureUnit',
 		'tender_lot_states' => 'TenderLotState',
 		'tender_lot_types'  => 'TenderLotType',
+		'sessions'          => 'Session',
 	],
 ];
 
@@ -113,7 +114,7 @@ foreach($table->constraints as $constraint) {
 		case $constraint->join instanceof Join\ManyToOne:
 		case $constraint->join instanceof Join\OneToOne:
 
-			echo sprintf("/**\n* %s \n*\n* @var %s\n* @see %sMap::%s */\npublic $%s;\n",
+			echo sprintf("/**\n* %s \n*\n* @var %s\n* @see %sMap::\$%s */\npublic $%s;\n",
 						 preg_replace('/\s\s+/', "; ", $constraint->foreignTable->annotation),
 						 $foreignTableName,
 						 $entityName,
@@ -137,13 +138,13 @@ foreach($table->columns as $column) {
 	$prefixLength = strlen($COLUMN_PREFIX);
 	if(strpos($column->name, $COLUMN_PREFIX) === 0) {
 		$columnName = Utils::dashesToCamelCase(substr($column->name, $prefixLength));
-		echo sprintf("/** @see %s::%s */\n public \$%s = %s;\n", $entityName, $columnName, $columnName, getColumn($column));
+		echo sprintf("/** \n* @var Column \n* @see %s::\$%s */\n public \$%s = %s;\n", $entityName, $columnName, $columnName, getColumn($column));
 	}
 }
 
 foreach($table->constraints as $constraint) {
 	$varName = getEntityName($constraint->foreignTable->name, $OVERRIDES); // Utils::dashesToCamelCase($constraint->foreignTable->name, true);
-	echo sprintf("/** @see %s::%s */\n protected \$%s = %s;\n", $entityName, $varName, $varName, getReference($constraint, $OVERRIDES));
+	echo sprintf("/** \n* @see %s::\$%s\n* @var Constraint\n*/\n protected \$%s = %s;\n", $entityName, $varName, $varName, getReference($constraint, $OVERRIDES));
 }
 
 foreach($table->columns as $column) {
@@ -157,7 +158,7 @@ foreach($table->columns as $column) {
 echo "}\n";
 
 function getReference(Constraint $constraint, $OVERRIDES) {
-	$str = sprintf("[ Constraint::COLUMN => \"%s\"", $constraint->localColumn->name);
+	$str = sprintf("[ Constraint::LOCAL_COLUMN => \"%s\"", $constraint->localColumn->name);
 	$str .= sprintf(", Constraint::FOREIGN_SCHEME => \"%s\"", $constraint->foreignTable->scheme);
 	$str .= sprintf(", Constraint::FOREIGN_TABLE => \"%s\"", $constraint->foreignTable->name);
 	$str .= sprintf(", Constraint::FOREIGN_COLUMN => \"%s\"", $constraint->foreignColumn->name);
