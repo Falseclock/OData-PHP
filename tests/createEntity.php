@@ -150,7 +150,7 @@ foreach($table->columns as $column) {
 	$prefixLength = strlen($COLUMN_PREFIX);
 	if(strpos($column->name, $COLUMN_PREFIX) === false) {
 		$columnName = Utils::dashesToCamelCase($column->name);
-		echo sprintf("private \$%s = %s;\n", $columnName, getColumn($column));
+		echo sprintf("protected \$%s = %s;\n", $columnName, getColumn($column));
 	}
 }
 

@@ -290,35 +290,35 @@ class TenderLotMap extends Mapper
 		Constraint::JOIN_TYPE      => Join::MANY_TO_ONE,
 		Constraint::BASE_CLASS     => Tender::class
 	];
-	private   $tenderId         = [
+	protected   $tenderId         = [
 		Column::NAME        => "tender_id",
 		Column::TYPE        => Primitive::Int32,
 		Column::NULLABLE    => false,
 		Column::ANNOTATION  => "Ссылка на тендер, под которым открывали лот",
 		Column::ORIGIN_TYPE => "int4"
 	];
-	private   $deliveryEntityId = [
+	protected   $deliveryEntityId = [
 		Column::NAME        => "delivery_entity_id",
 		Column::TYPE        => Primitive::Int32,
 		Column::NULLABLE    => false,
 		Column::ANNOTATION  => "Ссылка на регион поставки конкретного лота",
 		Column::ORIGIN_TYPE => "int4"
 	];
-	private   $categoryId       = [
+	protected   $categoryId       = [
 		Column::NAME        => "category_id",
 		Column::TYPE        => Primitive::Int32,
 		Column::NULLABLE    => false,
 		Column::ANNOTATION  => "Ссылка на категорию в которой открыт лот.",
 		Column::ORIGIN_TYPE => "int4"
 	];
-	private   $currencyId       = [
+	protected   $currencyId       = [
 		Column::NAME        => "currency_id",
 		Column::TYPE        => Primitive::Int32,
 		Column::NULLABLE    => false,
 		Column::ANNOTATION  => "Ссылка на валюту",
 		Column::ORIGIN_TYPE => "int4"
 	];
-	private   $measureUnitId    = [
+	protected   $measureUnitId    = [
 		Column::NAME        => "measure_unit_id",
 		Column::TYPE        => Primitive::Int32,
 		Column::NULLABLE    => false,
