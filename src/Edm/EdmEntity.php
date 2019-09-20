@@ -6,6 +6,7 @@ use Exception;
 use Falseclock\DBD\Entity\Column;
 use Falseclock\DBD\Entity\Common\EntityException;
 use Falseclock\DBD\Entity\Constraint;
+use Falseclock\DBD\Entity\ConstraintRaw;
 use Falseclock\DBD\Entity\Entity;
 use Falseclock\DBD\Entity\Mapper;
 use Falseclock\DBD\Entity\Table;
@@ -26,7 +27,7 @@ class EdmEntity
 	 */
 	public function __construct(string $className) {
 		$this->className = $className;
-		$this->mapping = $className::mappingInstance();
+		$this->mapping = $className::map();
 	}
 
 	/**
@@ -47,9 +48,25 @@ class EdmEntity
 
 	/**
 	 * @return Constraint[]
+	 * @throws Exception
 	 */
 	public function getConstraints(): iterable {
-		return $this->mapping->getConstraints();
+		$constraints = $this->mapping->getConstraints();
+
+		foreach($constraints as $constraint) {
+			if ($constraint instanceof ConstraintRaw) {
+				/** @var Entity $foreignMapperClass */
+				$foreignMapperClass = $constraint->class;
+				$foreignMapper = $foreignMapperClass::map();
+
+				/** @var string $foreignColumn */
+				$foreignColumn = $constraint->foreignColumn;
+
+				$constraint->foreignTable = $foreignMapper->getTable();
+				$constraint->foreignColumn = $foreignMapper->findColumnByOriginName($foreignColumn);
+			}
+		}
+		return $constraints;
 	}
 
 	/**
@@ -59,6 +76,13 @@ class EdmEntity
 		return (substr($this->className, strrpos($this->className, '\\') + 1));
 	}
 
+	/**
+	 * @param Table $table
+	 * @param       $columnOriginName
+	 *
+	 * @return int|string
+	 * @throws EntityException
+	 */
 	public function getColumnByOriginName(Table $table, $columnOriginName) {
 		foreach(array_merge($table->columns, $table->otherColumns) as $columnName => $columnValue) {
 			if($columnValue->name == $columnOriginName) {
