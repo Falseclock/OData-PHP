@@ -38,45 +38,6 @@ class EdmEntity
 	}
 
 	/**
-	 * @return Column[]
-	 */
-	public function getColumns(): iterable {
-		$properties = get_object_vars($this->mapping);
-
-		return $properties;
-	}
-
-	/**
-	 * @return Constraint[]
-	 * @throws Exception
-	 */
-	public function getConstraints(): iterable {
-		$constraints = $this->mapping->getConstraints();
-
-		foreach($constraints as $constraint) {
-			if ($constraint instanceof ConstraintRaw) {
-				/** @var Entity $foreignMapperClass */
-				$foreignMapperClass = $constraint->class;
-				$foreignMapper = $foreignMapperClass::map();
-
-				/** @var string $foreignColumn */
-				$foreignColumn = $constraint->foreignColumn;
-
-				$constraint->foreignTable = $foreignMapper->getTable();
-				$constraint->foreignColumn = $foreignMapper->findColumnByOriginName($foreignColumn);
-			}
-		}
-		return $constraints;
-	}
-
-	/**
-	 * @return string
-	 */
-	public function getName(): string {
-		return (substr($this->className, strrpos($this->className, '\\') + 1));
-	}
-
-	/**
 	 * @param Table $table
 	 * @param       $columnOriginName
 	 *
@@ -90,5 +51,51 @@ class EdmEntity
 			}
 		}
 		throw new EntityException("Can't find column {$columnOriginName}");
+	}
+
+	/**
+	 * @return Column[]
+	 * @throws Exception
+	 */
+	public function getColumns(): iterable {
+		$properties = array_merge($this->mapping->getColumns(), $this->mapping->getOtherColumns());
+		foreach($properties as $propertyName => $propertyValue) {
+			if(!$propertyValue instanceof Column) {
+				unset($properties[$propertyName]);
+			}
+		}
+
+		return $properties;
+	}
+
+	/**
+	 * @return Constraint[]
+	 * @throws Exception
+	 */
+	public function getConstraints(): iterable {
+		$constraints = $this->mapping->getConstraints();
+
+		foreach($constraints as $constraint) {
+			if($constraint instanceof ConstraintRaw) {
+				/** @var Entity $foreignMapperClass */
+				$foreignMapperClass = $constraint->class;
+				$foreignMapper = $foreignMapperClass::map();
+
+				/** @var string $foreignColumn */
+				$foreignColumn = $constraint->foreignColumn;
+
+				$constraint->foreignTable = $foreignMapper->getTable();
+				$constraint->foreignColumn = $foreignMapper->findColumnByOriginName($foreignColumn);
+			}
+		}
+
+		return $constraints;
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getName(): string {
+		return (substr($this->className, strrpos($this->className, '\\') + 1));
 	}
 }
