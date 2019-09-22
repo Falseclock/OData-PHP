@@ -343,28 +343,28 @@ class TenderLotMap extends Mapper
 		Column::ORIGIN_TYPE => "timestamptz"
 	];
 	/**
-	 * @var Complex
+	 * @var Embedded
 	 * @see TenderLot::$anyField
 	 */
 	public $anyField = [
-		Complex::NAME    => "tender_lot_any_field",
-		Complex::DB_TYPE => Type::Varchar,
+		Embedded::NAME    => "tender_lot_any_field",
+		Embedded::DB_TYPE => Type::Varchar,
 	];
 	/**
-	 * @var Complex
+	 * @var Embedded
 	 * @see TenderLot::$bidsCount
 	 */
 	public $bidsCount = [
-		Complex::NAME    => "tender_lot_bids_count",
-		Complex::DB_TYPE => Type::BigInt,
+		Embedded::NAME    => "tender_lot_bids_count",
+		Embedded::DB_TYPE => Type::BigInt,
 	];
 	/**
-	 * @var Complex
+	 * @var Embedded
 	 * @see TenderLot::$volume
 	 */
 	public    $volume  = [
-		Complex::NAME    => "tender_lot_volume",
-		Complex::DB_TYPE => Type::Double,
+		Embedded::NAME    => "tender_lot_volume",
+		Embedded::DB_TYPE => Type::Double,
 	];
 	protected $typeId  = [
 		Column::NAME        => "tender_lot_type_id",
@@ -508,23 +508,23 @@ class TenderLotMap extends Mapper
 	];
 	/**
 	 * @see TenderLot::$InitiatorUser
-	 * @var Embedded
+	 * @var Complex
 	 */
 	protected $InitiatorUser = [
-		Embedded::TYPE => InitiatorUser::class,
+		Complex::TYPE => InitiatorUser::class,
 	];
 	/**
 	 * @see TenderLot::$InitiatorPerson
-	 * @var Embedded
+	 * @var Complex
 	 */
 	protected $InitiatorPerson = [
-		Embedded::TYPE => InitiatorPerson::class,
+		Complex::TYPE => InitiatorPerson::class,
 	];
 	/**
 	 * @see TenderLot::$InitiatorCompany
-	 * @var Embedded
+	 * @var Complex
 	 */
 	protected $InitiatorCompany = [
-		Embedded::TYPE => InitiatorCompany::class,
+		Complex::TYPE => InitiatorCompany::class,
 	];
 }

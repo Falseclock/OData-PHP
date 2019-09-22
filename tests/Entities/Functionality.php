@@ -3,7 +3,7 @@
 namespace Tests\Entities;
 
 use Falseclock\DBD\Entity\Column;
-use Falseclock\DBD\Entity\Embedded;
+use Falseclock\DBD\Entity\Complex;
 use Falseclock\DBD\Entity\Entity;
 use Falseclock\DBD\Entity\Mapper;
 use Falseclock\DBD\Entity\Primitive;
@@ -102,9 +102,9 @@ class FunctionalityMap extends Mapper
 	];
 	/**
 	 * @see Functionality::$Permissions
-	 * @var Embedded
+	 * @var Complex
 	 */
 	protected $Permissions = [
-		Embedded::TYPE => Functionality::class,
+		Complex::TYPE => Functionality::class,
 	];
 }

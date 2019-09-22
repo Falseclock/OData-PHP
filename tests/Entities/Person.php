@@ -242,22 +242,22 @@ class PersonMap extends Mapper
 	 * @var Complex
 	 */
 	public $Admissions = [
-		Complex::NAME         => "person_admissions",
-		Complex::DB_TYPE      => Type::Json,
-		Complex::IS_ITERABLE  => true,
-		Complex::ENTITY_CLASS => Admission::class
+		Embedded::NAME         => "person_admissions",
+		Embedded::DB_TYPE      => Type::Json,
+		Embedded::IS_ITERABLE  => true,
+		Embedded::ENTITY_CLASS => Admission::class
 	];
 	/**
 	 * Искусственно, берется из вьюшки
 	 *
 	 * @see Person::$Admission
-	 * @var Complex
+	 * @var Embedded
 	 */
 	public $Permissions = [
-		Complex::NAME         => "person_permissions",
-		Complex::DB_TYPE      => Type::Json,
-		Complex::IS_ITERABLE  => true,
-		Complex::ENTITY_CLASS => Permission::class
+		Embedded::NAME         => "person_permissions",
+		Embedded::DB_TYPE      => Type::Json,
+		Embedded::IS_ITERABLE  => true,
+		Embedded::ENTITY_CLASS => Permission::class
 	];
 	/**
 	 * Ссылка на admissions. Поле позволяет задать разрешения и права для тех, кто зарегистрировался но не указал свою компанию
@@ -286,18 +286,18 @@ class PersonMap extends Mapper
 	 * Искусственно, берется из JOIN
 	 *
 	 * @see Person::$User
-	 * @var Embedded
+	 * @var Complex
 	 */
 	protected $User = [
-		Embedded::TYPE => User::class,
+		Complex::TYPE => User::class,
 	];
 	/**
 	 * Искусственно, берется из JOIN
 	 *
 	 * @see Person::$Company
-	 * @var Embedded
+	 * @var Complex
 	 */
 	protected $Company = [
-		Embedded::TYPE => Company::class
+		Complex::TYPE => Company::class
 	];
 }

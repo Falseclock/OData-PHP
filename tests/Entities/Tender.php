@@ -3,8 +3,8 @@
 namespace Tests\Entities;
 
 use Falseclock\DBD\Entity\Column;
+use Falseclock\DBD\Entity\Complex;
 use Falseclock\DBD\Entity\Constraint;
-use Falseclock\DBD\Entity\Embedded;
 use Falseclock\DBD\Entity\Entity;
 use Falseclock\DBD\Entity\Join;
 use Falseclock\DBD\Entity\Mapper;
@@ -121,11 +121,11 @@ class TenderMap extends Mapper
 	];
 	/**
 	 * @see Tender::$TenderLots
-	 * @var Embedded
+	 * @var Complex
 	 */
 	protected $TenderLots = [
-		Embedded::TYPE     => TenderLot::class,
-		Embedded::ITERABLE => true,
+		Complex::TYPE     => TenderLot::class,
+		Complex::ITERABLE => true,
 	];
 	protected $userId     = [
 		Column::NAME        => "user_id",
