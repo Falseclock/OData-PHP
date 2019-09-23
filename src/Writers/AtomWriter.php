@@ -3,7 +3,10 @@
 namespace Falseclock\OData\Writers;
 
 use Exception;
+use Falseclock\DBD\Entity\Column;
+use Falseclock\DBD\Entity\Common\EntityException;
 use Falseclock\DBD\Entity\Join;
+use Falseclock\OData\Edm\EdmEntity;
 use Falseclock\OData\Server\Configuration;
 use Falseclock\OData\Server\Context\Request;
 use Falseclock\OData\Server\Context\Response;
@@ -14,6 +17,9 @@ class AtomWriter extends BaseWriter
 {
 	/** @var XMLWriter Writer to which output (CSDL Document) is sent */
 	public $xmlWriter;
+	/** @var EdmEntity[] $entities */
+	private $entities          = [];
+	private $complexProperties = [];
 
 	public function __construct(/** @noinspection PhpUnusedParameterInspection */ Request &$request, Response &$response) {
 		$response->setContentType("application/xml; charset=UTF-8");
@@ -43,7 +49,7 @@ class AtomWriter extends BaseWriter
 	 */
 	public function metadata() {
 
-		$complexProperties = [];
+		$this->entities = $this->getEntities();
 
 		$this->xmlWriter->startElementNs(Constants::EDMX_NAMESPACE_PREFIX, Constants::EDMX_ELEMENT, Constants::EDMX_NAMESPACE);
 		$this->xmlWriter->writeAttribute(Constants::XMLNS_NAMESPACE_PREFIX, Constants::EDM_NAMESPACE);
@@ -80,7 +86,7 @@ class AtomWriter extends BaseWriter
 		$this->xmlWriter->startElementNs(null, Constants::SCHEMA, Constants::EDM_NAMESPACE);
 		$this->xmlWriter->writeAttribute(Constants::NAMESPACE, Configuration::me()->getNameSpace());
 
-		foreach($this->getEntities() as $entity) {
+		foreach($this->entities as $entity) {
 			/** <EntityType Name="EntityName" /> */
 			$this->xmlWriter->startElement(Constants::ENTITY_TYPE);
 			$this->xmlWriter->writeAttribute(Constants::NAME, $entity->getName());
@@ -101,39 +107,10 @@ class AtomWriter extends BaseWriter
 			}
 			$this->xmlWriter->endElement();
 
-			//process fields
+			//process common fields
 
 			foreach($entity->getColumns() as $propertyName => $property) {
-				$this->xmlWriter->startElement(Constants::PROPERTY);
-				$this->xmlWriter->writeAttribute(Constants::PROPERTY_NAME, $propertyName);
-				$this->xmlWriter->writeAttribute(Constants::PROPERTY_TYPE, Constants::PROPERTY_TYPE_PREFIX . $property->type->getValue());
-				if(isset($property->defaultValue))
-					$this->xmlWriter->writeAttribute(Constants::DEFAULT_VALUE, $property->defaultValue);
-
-				if(isset($property->maxLength))
-					$this->xmlWriter->writeAttribute(Constants::MAX_LENGTH, $property->maxLength);
-
-				if(is_bool($property->nullable))
-					$this->xmlWriter->writeAttribute(Constants::NULLABLE, ($property->nullable) ? 'true' : 'false');
-
-				if(isset($property->scale))
-					$this->xmlWriter->writeAttribute(Constants::SCALE, $property->scale);
-
-				if(isset($property->precision))
-					$this->xmlWriter->writeAttribute(Constants::PRECISION, $property->precision);
-
-				if(isset($property->annotation)) {
-					$this->xmlWriter->startElement(Constants::ANNOTATION);
-					$this->xmlWriter->writeAttribute(Constants::TERM, Constants::CORE_ANNOTATION_TERM);
-
-					$this->xmlWriter->startElement(Constants::STRING);
-					$this->xmlWriter->text(htmlspecialchars($property->annotation, ENT_XML1));
-					$this->xmlWriter->endElement();
-
-					$this->xmlWriter->endElement();
-				}
-
-				$this->xmlWriter->endElement();
+				$this->writeEntityProperties($propertyName, $property);
 			}
 
 			foreach($entity->getConstraints() as $constraintName => $constraintValue) {
@@ -176,7 +153,7 @@ class AtomWriter extends BaseWriter
 
 			foreach($entity->getComplexes() as $complexName => $complexValue) {
 
-				$complexProperties[$complexValue->typeClass] = $complexValue;
+				$this->complexProperties[$complexValue->typeClass] = $complexValue;
 
 				$typeClass = substr($complexValue->typeClass, strrpos($complexValue->typeClass, '\\') + 1);
 
@@ -209,6 +186,20 @@ class AtomWriter extends BaseWriter
 			}
 
 			/** </EntityType> */
+			$this->xmlWriter->endElement();
+		}
+
+		foreach($this->complexProperties as $complexName => $complexValue) {
+			$entity = $this->getEntityByClass($complexName);
+
+			$this->xmlWriter->startElement(Constants::COMPLEX_TYPE);
+			$this->xmlWriter->writeAttribute(Constants::NAME, substr($complexValue->typeClass, strrpos($complexValue->typeClass, '\\') + 1));
+
+			foreach($entity->getColumns() as $propertyName => $property) {
+				unset($property->defaultValue);
+				$this->writeEntityProperties($propertyName, $property);
+			}
+
 			$this->xmlWriter->endElement();
 		}
 
@@ -263,5 +254,58 @@ class AtomWriter extends BaseWriter
 		$this->xmlWriter->endElement();
 
 		return $this;
+	}
+
+	/**
+	 * @param $className
+	 *
+	 * @return EdmEntity
+	 * @throws EntityException
+	 */
+	private function getEntityByClass($className) {
+		foreach($this->entities as $entity) {
+			if($className == $entity->getClassName()) {
+				return $entity;
+			}
+		}
+		throw new EntityException("Can't find Entity by class name");
+	}
+
+	/**
+	 * @param string $propertyName
+	 * @param Column $property
+	 */
+	private function writeEntityProperties($propertyName, Column $property): void {
+
+		$this->xmlWriter->startElement(Constants::PROPERTY);
+		$this->xmlWriter->writeAttribute(Constants::PROPERTY_NAME, $propertyName);
+		$this->xmlWriter->writeAttribute(Constants::PROPERTY_TYPE, Constants::PROPERTY_TYPE_PREFIX . $property->type->getValue());
+		if(isset($property->defaultValue))
+			$this->xmlWriter->writeAttribute(Constants::DEFAULT_VALUE, $property->defaultValue);
+
+		if(isset($property->maxLength))
+			$this->xmlWriter->writeAttribute(Constants::MAX_LENGTH, $property->maxLength);
+
+		if(is_bool($property->nullable))
+			$this->xmlWriter->writeAttribute(Constants::NULLABLE, ($property->nullable) ? 'true' : 'false');
+
+		if(isset($property->scale))
+			$this->xmlWriter->writeAttribute(Constants::SCALE, $property->scale);
+
+		if(isset($property->precision))
+			$this->xmlWriter->writeAttribute(Constants::PRECISION, $property->precision);
+
+		if(isset($property->annotation)) {
+			$this->xmlWriter->startElement(Constants::ANNOTATION);
+			$this->xmlWriter->writeAttribute(Constants::TERM, Constants::CORE_ANNOTATION_TERM);
+
+			$this->xmlWriter->startElement(Constants::STRING);
+			$this->xmlWriter->text(htmlspecialchars($property->annotation, ENT_XML1));
+			$this->xmlWriter->endElement();
+
+			$this->xmlWriter->endElement();
+		}
+
+		$this->xmlWriter->endElement();
 	}
 }

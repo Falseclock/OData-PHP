@@ -94,4 +94,5 @@ class Constants
 	const REFERENTIAL_CONSTRAINT = "ReferentialConstraint";
 	const REFERENCED_PROPERTY = "ReferencedProperty";
 	const COLLECTION = "Collection";
+	const COMPLEX_TYPE = "ComplexType";
 }

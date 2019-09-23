@@ -39,6 +39,13 @@ class EdmEntity
 	}
 
 	/**
+	 * @return string
+	 */
+	public function getClassName() {
+		return $this->className;
+	}
+
+	/**
 	 * @param Table $table
 	 * @param       $columnOriginName
 	 *
