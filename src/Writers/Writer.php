@@ -29,4 +29,9 @@ interface Writer
 	 * @return self
 	 */
 	public function serviceDocument();
+
+	/**
+	 * @return self
+	 */
+	public function collection();
 }

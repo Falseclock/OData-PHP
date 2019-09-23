@@ -26,6 +26,13 @@ class JsonWriter extends BaseWriter
 		$this->response = $response;
 	}
 
+	/**
+	 * @return self
+	 */
+	public function collection() {
+		return $this;
+	}
+
 	public function getStringOutput() {
 		return json_encode($this->writer, JSON_UNESCAPED_UNICODE);
 	}

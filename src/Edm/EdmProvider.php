@@ -56,4 +56,8 @@ class EdmProvider
 	public function getEntities(): iterable {
 		return $this->entities;
 	}
+
+	public function getCollection() {
+
+	}
 }

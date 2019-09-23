@@ -311,4 +311,12 @@ class AtomWriter extends BaseWriter
 
 		$this->xmlWriter->endElement();
 	}
+
+	/**
+	 * @return self
+	 */
+	public function collection() {
+
+		return $this;
+	}
 }
