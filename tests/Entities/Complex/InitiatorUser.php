@@ -1,11 +1,14 @@
 <?php
 
-namespace Tests\Entities;
+namespace Tests\Entities\Complex;
 
 use Falseclock\DBD\Entity\Column;
+use Falseclock\DBD\Entity\Interfaces\Row;
 use Falseclock\DBD\Entity\Primitive;
+use Tests\Entities\User;
+use Tests\Entities\UserMap;
 
-class InitiatorUser extends User
+class InitiatorUser extends User implements Row
 {
 }
 

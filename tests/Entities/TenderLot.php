@@ -11,6 +11,9 @@ use Falseclock\DBD\Entity\Join;
 use Falseclock\DBD\Entity\Mapper;
 use Falseclock\DBD\Entity\Primitive;
 use Falseclock\DBD\Entity\Type;
+use Tests\Entities\Complex\InitiatorCompany;
+use Tests\Entities\Complex\InitiatorPerson;
+use Tests\Entities\Complex\InitiatorUser;
 
 class TenderLot extends Entity
 {

@@ -7,6 +7,7 @@ use Falseclock\DBD\Entity\Complex;
 use Falseclock\DBD\Entity\Entity;
 use Falseclock\DBD\Entity\Mapper;
 use Falseclock\DBD\Entity\Primitive;
+use Tests\Entities\Complex\PermissionRow;
 
 class Functionality extends Entity
 {
@@ -105,7 +106,7 @@ class FunctionalityMap extends Mapper
 	 * @var Complex
 	 */
 	protected $Permissions = [
-		Complex::TYPE     => Permission::class,
+		Complex::TYPE     => PermissionRow::class,
 		Complex::ITERABLE => true,
 	];
 }

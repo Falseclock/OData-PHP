@@ -8,25 +8,25 @@ use XMLWriter;
 
 interface Writer
 {
-    function __construct(Request &$request, Response &$response);
+	function __construct(Request &$request, Response &$response);
 
 	/**
 	 * @return string
 	 */
-    public function getStringOutput();
+	public function getStringOutput();
 
 	/**
 	 * @return mixed|XMLWriter
 	 */
-    public function getWriter();
-
-	/**
-	 * @return self
-	 */
-    public function serviceDocument();
+	public function getWriter();
 
 	/**
 	 * @return self
 	 */
 	public function metadata();
+
+	/**
+	 * @return self
+	 */
+	public function serviceDocument();
 }

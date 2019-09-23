@@ -11,6 +11,8 @@ use Falseclock\DBD\Entity\Join;
 use Falseclock\DBD\Entity\Mapper;
 use Falseclock\DBD\Entity\Primitive;
 use Falseclock\DBD\Entity\Type;
+use Tests\Entities\Complex\CompanyRow;
+use Tests\Entities\Complex\UserRow;
 
 class Person extends Entity
 {
@@ -239,7 +241,7 @@ class PersonMap extends Mapper
 	 * Искусственно, берется из JOIN
 	 *
 	 * @see Person::$Admission
-	 * @var Complex
+	 * @var Embedded
 	 */
 	public $Admissions = [
 		Embedded::NAME         => "person_admissions",
@@ -289,7 +291,7 @@ class PersonMap extends Mapper
 	 * @var Complex
 	 */
 	protected $User = [
-		Complex::TYPE => User::class,
+		Complex::TYPE => UserRow::class,
 	];
 	/**
 	 * Искусственно, берется из JOIN
@@ -298,6 +300,6 @@ class PersonMap extends Mapper
 	 * @var Complex
 	 */
 	protected $Company = [
-		Complex::TYPE => Company::class
+		Complex::TYPE => CompanyRow::class
 	];
 }

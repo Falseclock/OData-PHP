@@ -17,11 +17,10 @@ class AtomWriter extends BaseWriter
 {
 	/** @var XMLWriter Writer to which output (CSDL Document) is sent */
 	public $xmlWriter;
-	/** @var EdmEntity[] $entities */
-	private $entities          = [];
-	private $complexProperties = [];
 
 	public function __construct(/** @noinspection PhpUnusedParameterInspection */ Request &$request, Response &$response) {
+		parent::__construct($request, $response);
+
 		$response->setContentType("application/xml; charset=UTF-8");
 
 		$this->xmlWriter = new XMLWriter();
@@ -48,8 +47,6 @@ class AtomWriter extends BaseWriter
 	 * @throws Exception
 	 */
 	public function metadata() {
-
-		$this->entities = $this->getEntities();
 
 		$this->xmlWriter->startElementNs(Constants::EDMX_NAMESPACE_PREFIX, Constants::EDMX_ELEMENT, Constants::EDMX_NAMESPACE);
 		$this->xmlWriter->writeAttribute(Constants::XMLNS_NAMESPACE_PREFIX, Constants::EDM_NAMESPACE);
@@ -86,7 +83,7 @@ class AtomWriter extends BaseWriter
 		$this->xmlWriter->startElementNs(null, Constants::SCHEMA, Constants::EDM_NAMESPACE);
 		$this->xmlWriter->writeAttribute(Constants::NAMESPACE, Configuration::me()->getNameSpace());
 
-		foreach($this->entities as $entity) {
+		foreach($this->edmProvider->getEntities() as $entityClass => $entity) {
 			/** <EntityType Name="EntityName" /> */
 			$this->xmlWriter->startElement(Constants::ENTITY_TYPE);
 			$this->xmlWriter->writeAttribute(Constants::NAME, $entity->getName());
@@ -153,8 +150,6 @@ class AtomWriter extends BaseWriter
 
 			foreach($entity->getComplexes() as $complexName => $complexValue) {
 
-				$this->complexProperties[$complexValue->typeClass] = $complexValue;
-
 				$typeClass = substr($complexValue->typeClass, strrpos($complexValue->typeClass, '\\') + 1);
 
 				if($complexValue->isIterable) {
@@ -189,13 +184,17 @@ class AtomWriter extends BaseWriter
 			$this->xmlWriter->endElement();
 		}
 
-		foreach($this->complexProperties as $complexName => $complexValue) {
-			$entity = $this->getEntityByClass($complexName);
+		foreach($this->edmProvider->getComplexes() as $complexClass => $complexValue) {
+			if(isset($this->edmProvider->getEntities()[$complexClass])) {
+				throw new EntityException("Class '{$complexClass}' used somewhere for complex annotation. Please extend it with Row class implementation, 
+				cause EntityType and ComplexType can't have the same name."
+				);
+			}
 
 			$this->xmlWriter->startElement(Constants::COMPLEX_TYPE);
-			$this->xmlWriter->writeAttribute(Constants::NAME, substr($complexValue->typeClass, strrpos($complexValue->typeClass, '\\') + 1));
+			$this->xmlWriter->writeAttribute(Constants::NAME, substr($complexClass, strrpos($complexClass, '\\') + 1));
 
-			foreach($entity->getColumns() as $propertyName => $property) {
+			foreach($complexValue->getColumns() as $propertyName => $property) {
 				unset($property->defaultValue);
 				$this->writeEntityProperties($propertyName, $property);
 			}
@@ -261,9 +260,10 @@ class AtomWriter extends BaseWriter
 	 *
 	 * @return EdmEntity
 	 * @throws EntityException
+	 * @throws Exception
 	 */
 	private function getEntityByClass($className) {
-		foreach($this->entities as $entity) {
+		foreach($this->edmProvider->getEntities() as $entity) {
 			if($className == $entity->getClassName()) {
 				return $entity;
 			}
