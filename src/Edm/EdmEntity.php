@@ -92,7 +92,7 @@ class EdmEntity
 		$constraints = $this->mapping->getConstraints();
 
 		foreach($constraints as $constraint) {
-			if($constraint instanceof ConstraintRaw) {
+			if($constraint instanceof ConstraintRaw and !$constraint->foreignTable instanceof Table) {
 				/** @var Entity $foreignMapperClass */
 				$foreignMapperClass = $constraint->class;
 				$foreignMapper = $foreignMapperClass::map();

@@ -209,15 +209,15 @@ class AtomWriter extends BaseWriter
 			$this->xmlWriter->writeAttribute(Constants::NAME, $entity->getName());
 			$this->xmlWriter->writeAttribute(Constants::ENTITY_TYPE, Configuration::me()->getNameSpace() . "." . $entity->getName());
 
-/*			foreach($entity->getConstraints() as $constraintName => $constraintValue) {
+			foreach($entity->getConstraints() as $constraintName => $constraintValue) {
+				$target = substr($constraintValue->class, strrpos($constraintValue->class, '\\') + 1);
 				$this->xmlWriter->startElement(Constants::NAVIGATION_PROPERTY_BINDING);
-				$this->xmlWriter->writeAttribute(Constants::PROPERTY_PATH, $entity->getName());
-				$this->xmlWriter->writeAttribute(Constants::PROPERTY_TARGET, $entity->getName());
+				$this->xmlWriter->writeAttribute(Constants::PROPERTY_PATH, $constraintName); //Name of Entity property
+				$this->xmlWriter->writeAttribute(Constants::PROPERTY_TARGET, $target); // Name of referenced Entity class
 				$this->xmlWriter->endElement();
-			}*/
+			}
 
 			$this->xmlWriter->endElement();
-
 		}
 		$this->xmlWriter->endElement();
 
