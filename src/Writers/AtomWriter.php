@@ -6,7 +6,6 @@ use Exception;
 use Falseclock\DBD\Entity\Column;
 use Falseclock\DBD\Entity\Common\EntityException;
 use Falseclock\DBD\Entity\Join;
-use Falseclock\OData\Edm\EdmEntity;
 use Falseclock\OData\Server\Configuration;
 use Falseclock\OData\Server\Context\Request;
 use Falseclock\OData\Server\Context\Response;
@@ -202,6 +201,26 @@ class AtomWriter extends BaseWriter
 			$this->xmlWriter->endElement();
 		}
 
+		$this->xmlWriter->startElement(Constants::ENTITY_CONTAINER);
+		$this->xmlWriter->writeAttribute(Constants::NAME, Configuration::me()->getContainer());
+
+		foreach($this->edmProvider->getEntities() as $entityClass => $entity) {
+			$this->xmlWriter->startElement(Constants::ENTITY_SET);
+			$this->xmlWriter->writeAttribute(Constants::NAME, $entity->getName());
+			$this->xmlWriter->writeAttribute(Constants::ENTITY_TYPE, Configuration::me()->getNameSpace() . "." . $entity->getName());
+
+/*			foreach($entity->getConstraints() as $constraintName => $constraintValue) {
+				$this->xmlWriter->startElement(Constants::NAVIGATION_PROPERTY_BINDING);
+				$this->xmlWriter->writeAttribute(Constants::PROPERTY_PATH, $entity->getName());
+				$this->xmlWriter->writeAttribute(Constants::PROPERTY_TARGET, $entity->getName());
+				$this->xmlWriter->endElement();
+			}*/
+
+			$this->xmlWriter->endElement();
+
+		}
+		$this->xmlWriter->endElement();
+
 		/** </Schema> */
 		$this->xmlWriter->endElement();
 
@@ -253,22 +272,6 @@ class AtomWriter extends BaseWriter
 		$this->xmlWriter->endElement();
 
 		return $this;
-	}
-
-	/**
-	 * @param $className
-	 *
-	 * @return EdmEntity
-	 * @throws EntityException
-	 * @throws Exception
-	 */
-	private function getEntityByClass($className) {
-		foreach($this->edmProvider->getEntities() as $entity) {
-			if($className == $entity->getClassName()) {
-				return $entity;
-			}
-		}
-		throw new EntityException("Can't find Entity by class name");
 	}
 
 	/**

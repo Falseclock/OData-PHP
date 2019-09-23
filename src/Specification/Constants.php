@@ -95,4 +95,9 @@ class Constants
 	const REFERENCED_PROPERTY = "ReferencedProperty";
 	const COLLECTION = "Collection";
 	const COMPLEX_TYPE = "ComplexType";
+	const ENTITY_CONTAINER = "EntityContainer";
+	const ENTITY_SET = "EntitySet";
+	const NAVIGATION_PROPERTY_BINDING = "NavigationPropertyBinding";
+	const PROPERTY_PATH = "Path";
+	const PROPERTY_TARGET = "Target";
 }

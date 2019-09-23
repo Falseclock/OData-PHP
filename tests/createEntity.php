@@ -88,7 +88,7 @@ try {
 				$columnName = $tableStructure['mapping'][$column->name];
 			}
 			else {
-				$columnName = Utils::dashesToCamelCase($column->name);
+				$columnName = Utils::toCamelCase($column->name);
 			}
 
 			echo sprintf("/**\n* %s \n*\n* @var %s\n* @see %sMap::\$%s */\n",
@@ -152,7 +152,7 @@ try {
 
 		foreach($table->columns as $column) {
 			if(!isset($tableStructure['mapping'][$column->name])) {
-				$columnName = Utils::dashesToCamelCase($column->name);
+				$columnName = Utils::toCamelCase($column->name);
 				echo sprintf("protected \$%s = %s;\n", $columnName, getColumn($column));
 			}
 		}

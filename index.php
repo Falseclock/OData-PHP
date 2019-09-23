@@ -10,7 +10,13 @@ try {
 
 	$mapper = TenderLotMap::me();
 
-	Configuration::me()->setContextPath("/rest/odata/")->setNameSpace("api.mp.kz")->setEntityPath("Tests\\Entities")->setComposer($composer);
+	Configuration::me()
+				 ->setContextPath("/rest/odata/")
+				 ->setNameSpace("api.mp.kz")
+				 ->setEntityPath("Tests\\Entities")
+				 //->setContainer("MyContainerName")
+				 ->setComposer($composer)
+	;
 	$server = new Server();
 	$server->process()->out();
 
