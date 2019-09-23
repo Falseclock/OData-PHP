@@ -4,8 +4,8 @@ namespace Falseclock\OData\Writers;
 
 use Exception;
 use Falseclock\DBD\Entity\Column;
+use Falseclock\DBD\Entity\Common\EntityException;
 use Falseclock\DBD\Entity\Join;
-use Falseclock\OData\Edm\EdmEntity;
 use Falseclock\OData\Server\Configuration;
 use Falseclock\OData\Server\Context\Request;
 use Falseclock\OData\Server\Context\Response;
@@ -70,7 +70,8 @@ class JsonWriter extends BaseWriter
 			$entities[$entityName] = array_merge($entities[$entityName], [ '$' . Constants::KEY => $keys ]);
 
 			foreach($entity->getColumns() as $columnName => $property) {
-				$entities = $this->writeEntityProperties($property, $entities, $entity, $columnName);
+				$columns = $this->writeEntityProperties($property);
+				$entities[$entityName][$columnName] = $columns;
 			}
 
 			$annotation = $entity->getAnnotation();
@@ -101,16 +102,45 @@ class JsonWriter extends BaseWriter
 				$entities[$entityName] = array_merge($entities[$entityName], [ $constraintName => $reference ]);
 			}
 
-			foreach($entity->getComplexes() as $complexName => $complexValue) {
+			foreach($this->edmProvider->getComplexes() as $complexName => $complexValue) {
+				if(isset($this->edmProvider->getEntities()[$complexName])) {
+					throw new EntityException("Class '{$complexName}' used somewhere for complex annotation. Please extend it with Row class implementation, 
+				cause EntityType and ComplexType can't have the same name."
+					);
+				}
+				// Define name of the complex
+				$name = substr($complexName, strrpos($complexName, '\\') + 1);
+
+				/** Let's build ift. We should get something like this
+				 * "Categories": {
+				 *   "$Kind":       "ComplexType",
+				 *   "name":        {
+				 *     "$Type":              "Edm.String",
+				 *     "$MaxLength":         255,
+				 *     "@Core.Description#": "Название категории"
+				 *   },
+				 *   "description": {
+				 *     "$Type":              "Edm.String",
+				 *     "$MaxLength":         255,
+				 *     "@Core.Description#": "Дополнительная информация по категории"
+				 *   },
+				 *   "id":          {
+				 *     "$Type":              "Edm.Int32",
+				 *     "@Core.Description#": "Идентификатор категории, уникальный, серийный"
+				 *   }
+				 * }
+				 */
 
 				$complex = [];
 
 				$complex['$' . Constants::KIND] = Constants::COMPLEX_TYPE;
 
-				foreach($entity->getColumns() as $propertyName => $property) {
+				foreach($complexValue->getColumns() as $propertyName => $property) {
 					unset($property->defaultValue);
-					$entities = $this->writeEntityProperties($property, $entities, $entity, $propertyName);
+					$complex[$propertyName] = $this->writeEntityProperties($property);
 				}
+
+				$entities[$name] = $complex;
 			}
 		}
 
@@ -136,14 +166,11 @@ class JsonWriter extends BaseWriter
 	}
 
 	/**
-	 * @param Column    $property
-	 * @param array     $entities
-	 * @param EdmEntity $entity
-	 * @param string    $columnName
+	 * @param Column $property
 	 *
 	 * @return array
 	 */
-	private function writeEntityProperties(Column $property, array $entities, EdmEntity $entity, string $columnName): array {
+	private function writeEntityProperties(Column $property): array {
 		$column = [];
 		$column['$' . Constants::PROPERTY_TYPE] = Constants::PROPERTY_TYPE_PREFIX . $property->type->getValue();
 		if(isset($property->defaultValue))
@@ -164,8 +191,9 @@ class JsonWriter extends BaseWriter
 		if(isset($property->annotation))
 			$column['@' . Constants::CORE_ANNOTATION_TERM . '#'] = $property->annotation;
 
-		$entities[$entity->getName()] = array_merge($entities[$entity->getName()], [ $columnName => $column ]);
+		return $column;
+		/*		$entities[$entity->getName()] = array_merge($entities[$entity->getName()], [ $columnName => $column ]);
 
-		return $entities;
+				return $entities;*/
 	}
 }
