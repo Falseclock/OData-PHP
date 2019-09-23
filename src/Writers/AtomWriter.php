@@ -42,6 +42,9 @@ class AtomWriter extends BaseWriter
 	 * @throws Exception
 	 */
 	public function metadata() {
+
+		$complexProperties = [];
+
 		$this->xmlWriter->startElementNs(Constants::EDMX_NAMESPACE_PREFIX, Constants::EDMX_ELEMENT, Constants::EDMX_NAMESPACE);
 		$this->xmlWriter->writeAttribute(Constants::XMLNS_NAMESPACE_PREFIX, Constants::EDM_NAMESPACE);
 		$this->xmlWriter->writeAttribute(Constants::EDMX_VERSION, Constants::EDMX_VERSION_VALUE);
@@ -168,6 +171,28 @@ class AtomWriter extends BaseWriter
 				$this->xmlWriter->endElement();
 
 				/** NavigationProperty  */
+				$this->xmlWriter->endElement();
+			}
+
+			foreach($entity->getComplexes() as $complexName => $complexValue) {
+
+				$complexProperties[$complexValue->typeClass] = $complexValue;
+
+				$typeClass = substr($complexValue->typeClass, strrpos($complexValue->typeClass, '\\') + 1);
+
+				if($complexValue->isIterable) {
+					$typeClass = sprintf("Collection(%s.%s)", Configuration::me()->getNameSpace(), $typeClass);
+				}
+				else {
+					$typeClass = sprintf("%s.%s", Configuration::me()->getNameSpace(), $typeClass);
+				}
+
+				$this->xmlWriter->startElement(Constants::PROPERTY);
+				$this->xmlWriter->writeAttribute(Constants::PROPERTY_NAME, $complexName);
+				$this->xmlWriter->writeAttribute(Constants::PROPERTY_TYPE, $typeClass);
+				if($complexValue->nullable === false) {
+					$this->xmlWriter->writeAttribute(Constants::NULLABLE, "false");
+				}
 				$this->xmlWriter->endElement();
 			}
 

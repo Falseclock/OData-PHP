@@ -5,6 +5,7 @@ namespace Falseclock\OData\Edm;
 use Exception;
 use Falseclock\DBD\Entity\Column;
 use Falseclock\DBD\Entity\Common\EntityException;
+use Falseclock\DBD\Entity\Complex;
 use Falseclock\DBD\Entity\Constraint;
 use Falseclock\DBD\Entity\ConstraintRaw;
 use Falseclock\DBD\Entity\Entity;
@@ -66,6 +67,14 @@ class EdmEntity
 		}
 
 		return $properties;
+	}
+
+	/**
+	 * @return Complex[]
+	 * @throws Exception
+	 */
+	public function getComplexes(): iterable {
+		return $this->mapping->getComplex();
 	}
 
 	/**

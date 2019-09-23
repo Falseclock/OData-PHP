@@ -511,7 +511,8 @@ class TenderLotMap extends Mapper
 	 * @var Complex
 	 */
 	protected $InitiatorUser = [
-		Complex::TYPE => InitiatorUser::class,
+		Complex::TYPE     => InitiatorUser::class,
+		Complex::NULLABLE => false,
 	];
 	/**
 	 * @see TenderLot::$InitiatorPerson

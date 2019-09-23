@@ -105,6 +105,7 @@ class FunctionalityMap extends Mapper
 	 * @var Complex
 	 */
 	protected $Permissions = [
-		Complex::TYPE => Functionality::class,
+		Complex::TYPE     => Permission::class,
+		Complex::ITERABLE => true,
 	];
 }
