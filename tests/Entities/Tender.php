@@ -47,6 +47,7 @@ class Tender extends Entity
 	 *
 	 * @var User
 	 * @see TenderMap::$User
+	 * @see TenderMap::$userId
 	 */
 	public $User;
 	/**
@@ -127,7 +128,11 @@ class TenderMap extends Mapper
 		Complex::TYPE     => TenderLot::class,
 		Complex::ITERABLE => true,
 	];
-	protected $userId     = [
+	/**
+	 * @var Column $userId
+	 * @see Tender::$User
+	 */
+	protected $userId = [
 		Column::NAME        => "user_id",
 		Column::TYPE        => Primitive::Int32,
 		Column::NULLABLE    => false,
