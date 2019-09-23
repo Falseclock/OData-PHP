@@ -52,7 +52,9 @@ class JsonWriter extends BaseWriter
 			]
 		];
 
+		$nameSpace = Configuration::me()->getNameSpace();
 		$entities = [];
+
 		foreach($this->edmProvider->getEntities() as $entity) {
 
 			$entityName = $entity->getName();
@@ -86,12 +88,12 @@ class JsonWriter extends BaseWriter
 				switch($constraintValue->join) {
 					case Join::MANY_TO_MANY:
 					case Join::ONE_TO_MANY:
-						$reference['$' . Constants::PROPERTY_TYPE] = sprintf("Collection(%s.%s)", Configuration::me()->getNameSpace(), $constraintName);
+						$reference['$' . Constants::PROPERTY_TYPE] = sprintf("Collection(%s.%s)", $nameSpace, $constraintName);
 						$reference['$' . Constants::COLLECTION] = true;
 						$reference['$' . Constants::PROPERTY_PARTNER] = $entityName;
 						break;
 					default:
-						$reference['$' . Constants::PROPERTY_TYPE] = sprintf("%s.%s", Configuration::me()->getNameSpace(), $constraintName);
+						$reference['$' . Constants::PROPERTY_TYPE] = sprintf("%s.%s", $nameSpace, $constraintName);
 				}
 
 				$localColumn = $entity->getColumnByOriginName($constraintValue->localTable, $constraintValue->localColumn->name);
@@ -144,7 +146,27 @@ class JsonWriter extends BaseWriter
 			}
 		}
 
-		$this->writer[Configuration::me()->getNameSpace()] = (object) $entities;
+		$container = Configuration::me()->getContainer();
+		$entities[$container] = [ '$' . Constants::KIND => Constants::ENTITY_CONTAINER ];
+
+		foreach($this->edmProvider->getEntities() as $entityClass => $entity) {
+			$entities[$container][$entity->getName()] = [
+				'$' . Constants::KIND          => Constants::ENTITY_SET,
+				'$' . Constants::PROPERTY_TYPE => Configuration::me()->getNameSpace() . "." . $entity->getName()
+			];
+			$bindings = [];
+
+			foreach($entity->getConstraints() as $constraintName => $constraintValue) {
+				$target = substr($constraintValue->class, strrpos($constraintValue->class, '\\') + 1);
+				$bindings[$constraintName] = $target;
+			}
+
+			if(count($bindings)) {
+				$entities[$container][$entity->getName()]['$' . Constants::NAVIGATION_PROPERTY_BINDING] = $bindings;
+			}
+		}
+
+		$this->writer[$nameSpace] = (object) $entities;
 
 		return $this;
 	}
