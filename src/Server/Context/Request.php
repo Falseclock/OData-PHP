@@ -2,27 +2,27 @@
 
 namespace Falseclock\OData\Server\Context;
 
+use Falseclock\OData\Common\Url;
+
 class Request
 {
     const FORMAT_XML = "xml";
     const FORMAT_JSON = "json";
 
     /** @var string $method */
-    private $method;
+    protected $method;
     /** @var Header[] $headers */
-    private $headers;
+	protected $headers;
     /** @var string $payLoad */
-    private $payLoad;
-    /** @var string */
-    private $url;
+	protected $payLoad;
+    /** @var Url */
+	public $url;
     /** @var Parameter[] $params */
-    private $params;
-    /** @var string $path */
-    private $path;
+	protected $params;
     /** @var string $format */
-    private $format;
+	protected $format;
     /** @var string $metadata */
-    private $metadata = "minimal";
+	protected $metadata = "minimal";
 
     /**
      * @return string
@@ -101,22 +101,6 @@ class Request
     /**
      * @return string
      */
-    public function getPath(): string
-    {
-        return $this->path;
-    }
-
-    /**
-     * @param string $path
-     */
-    public function setPath(string $path): void
-    {
-        $this->path = $path;
-    }
-
-    /**
-     * @return string
-     */
     public function getPayLoad(): string
     {
         return $this->payLoad;
@@ -131,20 +115,11 @@ class Request
     }
 
     /**
-     * @return string
+     * @return Url
      */
-    public function getUrl(): string
+    public function getUrl(): Url
     {
         return $this->url;
     }
 
-    /**
-     * @param string $url
-     *
-     * @return void
-     */
-    public function setUrl(string $url): void
-    {
-        $this->url = $url;
-    }
 }
