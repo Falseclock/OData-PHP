@@ -32,7 +32,8 @@
     "ext-memcache":              "*"
   },
   "require-dev":  {
-    "symfony/var-dumper": "^3.3"
+    "symfony/var-dumper": "^3.3",
+    "ext-ctype":          "*"
   },
   "suggest":      {
   },
