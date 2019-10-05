@@ -2,18 +2,17 @@
 
 $CONVERT = [
 
-	'agents'                               => [
-		'scheme'     => 'public',
-		'EntityName' => 'Agent',
+	'our_purchasers'   => [
+		'scheme'     => 'seo',
+		'EntityName' => 'OurPurchaser',
 		'mapping'    => [
-			'agent_id'       => 'id',
-			'agent_name'     => 'name',
-			'agent_metadata' => 'metadata',
-			'agent_identity' => 'constant',
+			'our_purchaser_id'        => 'id',
+			'our_purchaser_logo'      => 'logo',
+			'our_purchaser_is_active' => 'isActive',
 		],
-		'namespace'  => 'MP\\Business\\Entities',
+		'namespace'  => 'MP\\Business\\Entities\\SEO',
 	],
-	'billing_backlogs'                     => [
+	'billing_backlogs' => [
 		'scheme'     => 'public',
 		'EntityName' => 'BillingBacklogOld',
 		'mapping'    => [

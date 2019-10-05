@@ -2,13 +2,13 @@
 
 namespace Tests\Entities;
 
-use Falseclock\DBD\Entity\Column;
-use Falseclock\DBD\Entity\Complex;
-use Falseclock\DBD\Entity\Constraint;
-use Falseclock\DBD\Entity\Entity;
-use Falseclock\DBD\Entity\Join;
-use Falseclock\DBD\Entity\Mapper;
-use Falseclock\DBD\Entity\Primitive;
+use DBD\Entity\Column;
+use DBD\Entity\Complex;
+use DBD\Entity\Constraint;
+use DBD\Entity\Entity;
+use DBD\Entity\Join;
+use DBD\Entity\Mapper;
+use DBD\Entity\Primitive;
 
 class Tender extends Entity
 {

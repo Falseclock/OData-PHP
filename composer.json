@@ -25,11 +25,11 @@
     "php":                       "^7.1",
     "ext-json":                  "*",
     "ext-xmlwriter":             "*",
-    "falseclock/dbd-php-entity": "dev-master",
-    "falseclock/dbd-php":        "dev-RealPrepareExecute",
     "ext-pgsql":                 "*",
     "ext-curl":                  "*",
-    "ext-memcache":              "*"
+    "ext-memcache":              "*",
+    "falseclock/dbd-php-entity": "dev-master",
+    "falseclock/dbd-php":        "dev-master"
   },
   "require-dev":  {
     "symfony/var-dumper": "^3.3",
@@ -50,5 +50,7 @@
   "config":       {
     "optimize-autoloader": true,
     "apcu-autoloader":     true
-  }
+  },
+  "minimum-stability": "dev",
+  "prefer-stable": true
 }

@@ -2,10 +2,10 @@
 
 namespace Falseclock\OData\Edm;
 
+use DBD\Entity\Column;
+use DBD\Entity\Entity;
+use DBD\Entity\Mapper;
 use Exception;
-use Falseclock\DBD\Entity\Column;
-use Falseclock\DBD\Entity\Entity;
-use Falseclock\DBD\Entity\Mapper;
 
 class EdmComplex
 {

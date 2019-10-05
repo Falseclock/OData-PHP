@@ -2,10 +2,10 @@
 
 namespace Falseclock\OData\Writers;
 
+use DBD\Entity\Column;
+use DBD\Entity\Common\EntityException;
+use DBD\Entity\Join;
 use Exception;
-use Falseclock\DBD\Entity\Column;
-use Falseclock\DBD\Entity\Common\EntityException;
-use Falseclock\DBD\Entity\Join;
 use Falseclock\OData\Server\Configuration;
 use Falseclock\OData\Server\Context\Request;
 use Falseclock\OData\Server\Context\Response;

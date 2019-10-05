@@ -2,9 +2,9 @@
 
 namespace Falseclock\OData\Edm;
 
+use DBD\Entity\Entity;
+use DBD\Entity\Interfaces\Row;
 use Exception;
-use Falseclock\DBD\Entity\Entity;
-use Falseclock\DBD\Entity\Interfaces\Row;
 use Falseclock\OData\Server\Configuration;
 use ReflectionClass;
 use ReflectionException;

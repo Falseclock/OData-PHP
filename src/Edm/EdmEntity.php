@@ -2,15 +2,15 @@
 
 namespace Falseclock\OData\Edm;
 
+use DBD\Entity\Column;
+use DBD\Entity\Common\EntityException;
+use DBD\Entity\Complex;
+use DBD\Entity\Constraint;
+use DBD\Entity\ConstraintRaw;
+use DBD\Entity\Entity;
+use DBD\Entity\Mapper;
+use DBD\Entity\Table;
 use Exception;
-use Falseclock\DBD\Entity\Column;
-use Falseclock\DBD\Entity\Common\EntityException;
-use Falseclock\DBD\Entity\Complex;
-use Falseclock\DBD\Entity\Constraint;
-use Falseclock\DBD\Entity\ConstraintRaw;
-use Falseclock\DBD\Entity\Entity;
-use Falseclock\DBD\Entity\Mapper;
-use Falseclock\DBD\Entity\Table;
 
 class EdmEntity
 {

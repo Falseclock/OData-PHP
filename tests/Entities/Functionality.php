@@ -2,11 +2,11 @@
 
 namespace Tests\Entities;
 
-use Falseclock\DBD\Entity\Column;
-use Falseclock\DBD\Entity\Complex;
-use Falseclock\DBD\Entity\Entity;
-use Falseclock\DBD\Entity\Mapper;
-use Falseclock\DBD\Entity\Primitive;
+use DBD\Entity\Column;
+use DBD\Entity\Complex;
+use DBD\Entity\Entity;
+use DBD\Entity\Mapper;
+use DBD\Entity\Primitive;
 use Tests\Entities\Complex\PermissionRow;
 
 class Functionality extends Entity

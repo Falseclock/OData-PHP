@@ -2,7 +2,7 @@
 
 namespace Tests\Entities\Complex;
 
-use Falseclock\DBD\Entity\Interfaces\Row;
+use DBD\Entity\Interfaces\Row;
 use Tests\Entities\User;
 use Tests\Entities\UserMap;
 

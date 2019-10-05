@@ -2,9 +2,9 @@
 
 namespace Tests\Entities\Complex;
 
-use Falseclock\DBD\Entity\Column;
-use Falseclock\DBD\Entity\Interfaces\Row;
-use Falseclock\DBD\Entity\Primitive;
+use DBD\Entity\Column;
+use DBD\Entity\Interfaces\Row;
+use DBD\Entity\Primitive;
 use Tests\Entities\Person;
 use Tests\Entities\PersonMap;
 

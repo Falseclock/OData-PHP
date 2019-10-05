@@ -2,10 +2,10 @@
 
 namespace Tests\Entities;
 
-use Falseclock\DBD\Entity\Column;
-use Falseclock\DBD\Entity\Entity;
-use Falseclock\DBD\Entity\Mapper;
-use Falseclock\DBD\Entity\Primitive;
+use DBD\Entity\Column;
+use DBD\Entity\Entity;
+use DBD\Entity\Mapper;
+use DBD\Entity\Primitive;
 
 class CompanyData extends Entity
 {

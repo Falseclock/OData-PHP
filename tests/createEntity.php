@@ -3,11 +3,11 @@
 error_reporting(E_ALL);
 $composer = require_once('../vendor/autoload.php');
 
-use Falseclock\DBD\Common\Utils;
-use Falseclock\DBD\Common\Utils as DBDUtils;
-use Falseclock\DBD\Entity\Column;
-use Falseclock\DBD\Entity\Constraint;
-use Falseclock\DBD\Entity\Join;
+use DBD\Common\Utils;
+use DBD\Common\Utils as DBDUtils;
+use DBD\Entity\Column;
+use DBD\Entity\Constraint;
+use DBD\Entity\Join;
 
 require_once('./dbConnection.php');
 
@@ -19,7 +19,7 @@ require_once('./convert.php');
 try {
 	foreach($CONVERT as $tableName => $tableStructure) {
 
-		if ($tableStructure['EntityName'] != 'MonitorEventTypeOld') {
+		if($tableStructure['EntityName'] != 'OurPurchaser') {
 			continue;
 		}
 		ob_start();
@@ -71,12 +71,12 @@ try {
 
 		echo "<?php\n\n";
 		echo "namespace {$tableStructure['namespace']};\n\n";
-		echo "use Falseclock\DBD\Entity\Column;\n";
-		echo "use Falseclock\DBD\Entity\Constraint;\n";
-		echo "use Falseclock\DBD\Entity\Entity;\n";
-		echo "use Falseclock\DBD\Entity\Join;\n";
-		echo "use Falseclock\DBD\Entity\Mapper;\n";
-		echo "use Falseclock\DBD\Entity\Primitive;\n";
+		echo "use DBD\Entity\Column;\n";
+		echo "use DBD\Entity\Constraint;\n";
+		echo "use DBD\Entity\Entity;\n";
+		echo "use DBD\Entity\Join;\n";
+		echo "use DBD\Entity\Mapper;\n";
+		echo "use DBD\Entity\Primitive;\n";
 
 		$entityName = $tableStructure['EntityName'];
 
